@@ -7,6 +7,7 @@
 //
 
 #import "AppDelegate.h"
+#import "iTunes.h"
 #import "Album.h"
 #import "Music.h"
 
@@ -14,6 +15,18 @@
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
+    // Get selected tracks
+    iTunesApplication *iTunes = [SBApplication applicationWithBundleIdentifier:@"com.apple.iTunes"];
+    NSArray *sel = [[iTunes selection] get];
+    NSUInteger nSel = [sel count];
+    
+    NSMutableArray* tracks = [[NSMutableArray alloc] initWithCapacity:nSel];
+    for (iTunesFileTrack* f in sel)
+    {
+        [tracks insertObject:f atIndex:[f trackNumber]-1];
+    }
+    assert(nSel == [tracks count]);
+    
     // Get album page
     NSURL *url = [[NSURL alloc] initWithString:@"http://music.bugs.co.kr/album/324696"];
     NSError *err=nil;
@@ -23,6 +36,7 @@
     
     // Get list of song
     NSArray *nodes = [xmlDoc nodesForXPath:@"//*[@id=\"idTrackList\"]/li" error:&err];
+    assert([tracks count] == [nodes count]);
     
     Album *album = [[Album alloc] initWithTitle:@"test" numOfMusic:[nodes count]];
     
@@ -68,12 +82,19 @@
         [album.musics addObject:music];
     }
     
-    // TEST
-    NSLog(@"Album - %@", [album description]);
-    for (Music* m in [album musics])
+    // Set lyric
+    for(NSInteger i = 0; i < [tracks count]; ++i)
     {
-        NSLog(@"Music - %@",[m description]);
+        NSLog(@"%@ - %@", [tracks[i] name], [album.musics[i] title]);
+        [tracks[i] setLyrics:[album.musics[i] lyric]];
     }
+    
+    // TEST
+//    NSLog(@"Album - %@", [album description]);
+//    for (Music* m in [album musics])
+//    {
+//        NSLog(@"Music - %@",[m description]);
+//    }
 }
 
 @end
