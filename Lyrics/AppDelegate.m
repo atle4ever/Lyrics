@@ -19,7 +19,7 @@
     NSError *err=nil;
     NSXMLDocument *xmlDoc = [[NSXMLDocument alloc] initWithContentsOfURL:url
                                                                  options:NSXMLDocumentTidyXML
-                                                                 error:&err];
+                                                                   error:&err];
     
     // Get list of song
     NSArray *nodes = [xmlDoc nodesForXPath:@"//*[@id=\"idTrackList\"]/li" error:&err];
@@ -29,10 +29,41 @@
     for (NSXMLNode* n in nodes)
     {
         // Title
-        NSXMLNode* title = [n nodesForXPath:@"./dl/dt/a/@title" error:&err][0];
-        Music *music = [[Music alloc] initWithTitle:title.stringValue];
+        NSString* title = [[n nodesForXPath:@"./dl/dt/a/@title" error:&err][0] stringValue];
+        Music *music = [[Music alloc] initWithTitle:title];
         
         // Lyric
+        NSString* hrefStr = [[n nodesForXPath:@"./dl/dt/a/@href" error:&err][0] stringValue];
+        NSString* musicId = [hrefStr substringWithRange:NSMakeRange(35, 7)];
+        NSString* musicUrlStr = [NSString stringWithFormat:@"http://music.bugs.co.kr/track/%@", musicId];
+        NSURL *musicUrl = [[NSURL alloc] initWithString:musicUrlStr];
+        
+        NSXMLDocument *musicPage = [[NSXMLDocument alloc] initWithContentsOfURL:musicUrl
+                                                                        options:NSXMLDocumentTidyXML
+                                                                          error:&err];
+        
+        NSArray *nodes = [musicPage nodesForXPath:@"//*[@id=\"content\"]/div[2]/p" error:&err];
+        if([nodes count] > 0)
+        {
+            assert([nodes count] == 1);
+            NSXMLNode *n = nodes[0];
+            NSArray *lines = [n children];
+            
+            NSMutableString* lyric = [NSMutableString string];
+            for(NSXMLNode *l in lines)
+            {
+                NSString* str = [l description];
+                if([str compare:@"<br></br>"] == 0)
+                {
+                    [lyric appendString:@"\n"];
+                }
+                else
+                {
+                    [lyric appendString:str];
+                }
+            }
+            [music setLyric:lyric];
+        }
         
         [album.musics addObject:music];
     }

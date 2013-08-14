@@ -24,7 +24,24 @@
 
 - (NSString*)description
 {
-    NSString *desc = [NSString stringWithFormat:@"Title: %@", self.title];
+    NSString *descLyric;
+    if(lyric != nil)
+    {
+        if([lyric length] > 40)
+        {
+            descLyric = [NSString stringWithFormat:@"%@ ...",[lyric substringToIndex:20]];
+        }
+        else
+        {
+            descLyric = lyric;
+        }
+    }
+    else
+    {
+        descLyric = @"no lyrics";
+    }
+    
+    NSString *desc = [NSString stringWithFormat:@"Title: %@, Lyrics: %@", self.title, descLyric];
     return desc;
 }
 
