@@ -12,10 +12,14 @@
 {
     NSString* title;
     NSMutableArray* musics;
+    NSString* artist;
+    NSInteger year;
 }
 
 @property NSString* title;
 @property NSMutableArray* musics;
+@property NSString* artist;
+@property NSInteger year;
 
 - (id)initWithTitle:(NSString*)aTitle numOfMusic:(NSUInteger)num;
 

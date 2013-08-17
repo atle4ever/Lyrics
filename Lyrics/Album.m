@@ -12,6 +12,8 @@
 
 @synthesize title;
 @synthesize musics;
+@synthesize artist;
+@synthesize year;
 
 
 - (id)initWithTitle:(NSString *)aTitle numOfMusic:(NSUInteger)num

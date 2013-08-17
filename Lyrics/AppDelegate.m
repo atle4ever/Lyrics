@@ -64,6 +64,7 @@
         NSString* title = [[n nodesForXPath:@"./dl/dt/a/@title" error:&err][0] stringValue];
         Music *music = [[Music alloc] initWithTitle:title];
         
+        
         // Lyric
         NSString* hrefStr = [[n nodesForXPath:@"./dl/dt/a/@href" error:&err][0] stringValue];
         NSString* musicId = [hrefStr substringWithRange:NSMakeRange(35, 7)];
@@ -101,8 +102,29 @@
             [music setLyric:@""];
         }
         
+        // Artist
+        nodes = [musicPage nodesForXPath:@"//*[@id=\"content\"]/div[1]/div[2]/div[2]/div/dl/dd[1]/strong/a/text()" error:&err];
+        assert([nodes count] == 1);
+        [music setArtist:[nodes[0] description]];
+        
+        // Genre
+        nodes = [musicPage nodesForXPath:@"//*[@id=\"content\"]/div[1]/div[2]/div[2]/div/dl/dd[3]/text()" error:&err];
+        assert([nodes count] == 1);
+        [music setGenre:[nodes[0] description]];
+        
         [album.musics addObject:music];
     }
+    
+    // Get album artist
+    nodes = [xmlDoc nodesForXPath:@"//*[@id=\"content\"]/div[1]/div[2]/div[2]/dl/dd[1]/strong/text()" error:&err];
+    assert([nodes count] == 1);
+    [album setArtist:[nodes[0] description]];
+    
+    // Get issue date
+    nodes = [xmlDoc nodesForXPath:@"//*[@id=\"content\"]/div[1]/div[2]/div[2]/dl/dd[5]/text()" error:&err];
+    assert([nodes count] == 1);
+    [album setYear:[[[nodes[0] description] substringToIndex:4] integerValue]];
+    
     
     // Update informations
     for(NSInteger i = 0; i < [tracks count]; ++i)
@@ -119,6 +141,10 @@
             
             [track setName:[music title]];
             [track setLyrics:[music lyric]];
+            [track setArtist:[music artist]];
+            [track setGenre:[music genre]];
+            [track setAlbumArtist:[album artist]];
+            [track setYear:[album year]];
         }
     }
 }

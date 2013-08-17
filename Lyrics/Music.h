@@ -12,10 +12,14 @@
 {
     NSString* title;
     NSString* lyric;
+    NSString* artist;
+    NSString* genre;
 }
 
 @property NSString* title;
 @property NSString* lyric;
+@property NSString* artist;
+@property NSString* genre;
 
 - (id)initWithTitle:(NSString*)aTitle;
 

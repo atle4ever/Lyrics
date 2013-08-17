@@ -12,6 +12,8 @@
 
 @synthesize title;
 @synthesize lyric;
+@synthesize artist;
+@synthesize genre;
 
 - (id) initWithTitle:(NSString *)aTitle
 {
