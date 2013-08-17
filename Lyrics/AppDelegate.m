@@ -23,12 +23,30 @@
     NSMutableArray* tracks = [[NSMutableArray alloc] initWithCapacity:nSel];
     for (iTunesFileTrack* f in sel)
     {
-        [tracks insertObject:f atIndex:[f trackNumber]-1];
+        [tracks addObject:f];
     }
+    NSSortDescriptor *sortDesc = [[NSSortDescriptor alloc] initWithKey:@"trackNumber" ascending:YES];
+    NSArray *sortDescs = [NSArray arrayWithObject:sortDesc];
+    [tracks sortUsingDescriptors:sortDescs];
     assert(nSel == [tracks count]);
     
+    // Get URL of album page from user
+    NSString *urlStr;
+    NSAlert *dialog = [NSAlert alertWithMessageText:@"앨범 URL을 입력해주세요." defaultButton:@"확인" alternateButton:@"취소" otherButton:nil informativeTextWithFormat:@"현재 벅스 사이트만 지원합니다."];
+    NSTextField *input = [[NSTextField alloc] initWithFrame:NSMakeRect(0, 0, 300, 24)];
+    [dialog setAccessoryView:input];
+    NSInteger button = [dialog runModal];
+    if (button == NSAlertDefaultReturn)
+    {
+        urlStr = [input stringValue];
+    }
+    else
+    {
+        return;
+    }
+    
     // Get album page
-    NSURL *url = [[NSURL alloc] initWithString:@"http://music.bugs.co.kr/album/324696"];
+    NSURL *url = [[NSURL alloc] initWithString:urlStr];
     NSError *err=nil;
     NSXMLDocument *xmlDoc = [[NSXMLDocument alloc] initWithContentsOfURL:url
                                                                  options:NSXMLDocumentTidyXML
@@ -78,23 +96,31 @@
             }
             [music setLyric:lyric];
         }
+        else
+        {
+            [music setLyric:@""];
+        }
         
         [album.musics addObject:music];
     }
     
-    // Set lyric
+    // Update informations
     for(NSInteger i = 0; i < [tracks count]; ++i)
     {
-        NSLog(@"%@ - %@", [tracks[i] name], [album.musics[i] title]);
-        [tracks[i] setLyrics:[album.musics[i] lyric]];
+        iTunesFileTrack* track = tracks[i];
+        Music* music = album.musics[i];
+        
+        NSString *msg = [NSString stringWithFormat:@"%@ -> %@", [track name], [music title]];
+        NSAlert *dialog = [NSAlert alertWithMessageText:@"다음 곡 정보로 변경하겠습니까?" defaultButton:@"확인" alternateButton:@"취소" otherButton:nil informativeTextWithFormat:msg];
+        NSInteger button = [dialog runModal];
+        if (button == NSAlertDefaultReturn)
+        {
+            NSLog(@"변경 %@ -> %@", [track name], [music title]);
+            
+            [track setName:[music title]];
+            [track setLyrics:[music lyric]];
+        }
     }
-    
-    // TEST
-//    NSLog(@"Album - %@", [album description]);
-//    for (Music* m in [album musics])
-//    {
-//        NSLog(@"Music - %@",[m description]);
-//    }
 }
 
 @end
