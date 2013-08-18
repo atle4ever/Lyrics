@@ -10,8 +10,13 @@
 #import "iTunes.h"
 #import "Album.h"
 #import "Music.h"
+#import "CustomCheckBox.h"
 
 @implementation AppDelegate
+
+@synthesize album;
+@synthesize tracks;
+@synthesize selected;
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
@@ -20,7 +25,7 @@
     NSArray *sel = [[iTunes selection] get];
     NSUInteger nSel = [sel count];
     
-    NSMutableArray* tracks = [[NSMutableArray alloc] initWithCapacity:nSel];
+    tracks = [[NSMutableArray alloc] initWithCapacity:nSel];
     for (iTunesFileTrack* f in sel)
     {
         [tracks addObject:f];
@@ -29,6 +34,13 @@
     NSArray *sortDescs = [NSArray arrayWithObject:sortDesc];
     [tracks sortUsingDescriptors:sortDescs];
     assert(nSel == [tracks count]);
+    
+    // Create array for selected
+    selected = [[NSMutableArray alloc] initWithCapacity:nSel];
+    for(int i = 0; i < nSel; ++i)
+    {
+        [selected addObject:[NSNumber numberWithInt:NSOnState]];
+    }
     
     // Get URL of album page from user
     NSString *urlStr;
@@ -56,7 +68,7 @@
     NSArray *nodes = [xmlDoc nodesForXPath:@"//*[@id=\"idTrackList\"]/li" error:&err];
     assert([tracks count] == [nodes count]);
     
-    Album *album = [[Album alloc] initWithTitle:@"test" numOfMusic:[nodes count]];
+    album = [[Album alloc] initWithTitle:@"test" numOfMusic:[nodes count]];
     
     for (NSXMLNode* n in nodes)
     {
@@ -67,7 +79,7 @@
         
         // Lyric
         NSString* hrefStr = [[n nodesForXPath:@"./dl/dt/a/@href" error:&err][0] stringValue];
-        NSString* musicId = [hrefStr substringWithRange:NSMakeRange(35, 7)];
+        NSString* musicId = [[NSNumber numberWithInteger:[[hrefStr substringWithRange:NSMakeRange(35, 9)] integerValue]] stringValue];
         NSString* musicUrlStr = [NSString stringWithFormat:@"http://music.bugs.co.kr/track/%@", musicId];
         NSURL *musicUrl = [[NSURL alloc] initWithString:musicUrlStr];
         
@@ -104,6 +116,8 @@
         
         // Artist
         nodes = [musicPage nodesForXPath:@"//*[@id=\"content\"]/div[1]/div[2]/div[2]/div/dl/dd[1]/strong/a/text()" error:&err];
+        if([nodes count] != 1) // when artist isn't linked
+            nodes = [musicPage nodesForXPath:@"//*[@id=\"content\"]/div[1]/div[2]/div[2]/div/dl/dd[1]/strong/text()" error:&err];
         assert([nodes count] == 1);
         [music setArtist:[nodes[0] description]];
         
@@ -116,7 +130,9 @@
     }
     
     // Get album artist
-    nodes = [xmlDoc nodesForXPath:@"//*[@id=\"content\"]/div[1]/div[2]/div[2]/dl/dd[1]/strong/text()" error:&err];
+    nodes = [xmlDoc nodesForXPath:@"//*[@id=\"content\"]/div[1]/div[2]/div[2]/dl/dd[1]/strong/a/text()" error:&err];
+    if([nodes count] != 1)  // when artist isn't linked
+        nodes = [xmlDoc nodesForXPath:@"//*[@id=\"content\"]/div[1]/div[2]/div[2]/dl/dd[1]/strong/text()" error:&err];
     assert([nodes count] == 1);
     [album setArtist:[nodes[0] description]];
     
@@ -125,27 +141,106 @@
     assert([nodes count] == 1);
     [album setYear:[[[nodes[0] description] substringToIndex:4] integerValue]];
     
+    [self.tableView reloadData];
+}
+
+#pragma mark - NSTableViewDataSource
+
+- (NSInteger)numberOfRowsInTableView:(NSTableView *)aTableView
+{
+    return [album.musics count];
+}
+
+
+
+- (id) tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
+{
+   return @"test";
+}
+
+- (NSView *) tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
+{
+    NSTableCellView *result = [tableView makeViewWithIdentifier:@"CustomCell" owner:self];
     
-    // Update informations
-    for(NSInteger i = 0; i < [tracks count]; ++i)
-    {
-        iTunesFileTrack* track = tracks[i];
-        Music* music = album.musics[i];
+    if (result == nil) {
+        result = [[NSTableCellView alloc] initWithFrame:NSMakeRect(0, 0, 418, 82)];
+        [result setBackgroundStyle:NSBackgroundStyleRaised];
         
-        NSString *msg = [NSString stringWithFormat:@"%@ -> %@", [track name], [music title]];
-        NSAlert *dialog = [NSAlert alertWithMessageText:@"다음 곡 정보로 변경하겠습니까?" defaultButton:@"확인" alternateButton:@"취소" otherButton:nil informativeTextWithFormat:msg];
-        NSInteger button = [dialog runModal];
-        if (button == NSAlertDefaultReturn)
-        {
-            NSLog(@"변경 %@ -> %@", [track name], [music title]);
-            
-            [track setName:[music title]];
-            [track setLyrics:[music lyric]];
-            [track setArtist:[music artist]];
-            [track setGenre:[music genre]];
-            [track setAlbumArtist:[album artist]];
-            [track setYear:[album year]];
-        }
+        CustomCheckBox* check = [[CustomCheckBox alloc] initWithFrame:NSMakeRect(18, 32, 22, 18)];
+        [check setButtonType:NSSwitchButton];
+        [check setTag:10];
+        [result addSubview:check];
+        
+        NSTextField *label1 = [[NSTextField alloc] initWithFrame:NSMakeRect(44, 45, 356, 17)];
+        [label1 setBezeled:NO];
+        [label1 setDrawsBackground:NO];
+        [label1 setEditable:NO];
+        [label1 setSelectable:NO];
+        [label1 setTag:11];
+        [result addSubview:label1];
+        
+        NSTextField *label2 = [[NSTextField alloc] initWithFrame:NSMakeRect(44, 22, 356, 17)];
+        [label2 setBezeled:NO];
+        [label2 setDrawsBackground:NO];
+        [label2 setEditable:NO];
+        [label2 setSelectable:NO];
+        [label2 setTag:12];
+        [result addSubview:label2];
+    }
+    iTunesFileTrack* track = self.tracks[row];
+    Music *music = self.album.musics[row];
+    NSNumber *select = self.selected[row];
+    
+    CustomCheckBox *check = [result viewWithTag:10];
+    [check setIndex:row];
+    [check setState:[select integerValue]];
+    [check setTarget:self];
+    [check setAction:@selector(performClick:)];
+    
+    NSTextField *label1 = [result viewWithTag:11];
+    [label1 setStringValue:[track name]];
+    
+    NSTextField *label2 = [result viewWithTag:12];
+    [label2 setStringValue:[music title]];
+    
+    return result;
+}
+
+- (CGFloat)tableView:(NSTableView *)tableView heightOfRow:(NSInteger)row
+{
+    return 82;
+}
+
+- (IBAction) performClick:(id)sender
+{
+    CustomCheckBox *check = sender;
+    NSNumber* s = self.selected[[check index]];
+    if([s integerValue] == NSOnState)
+        [self.selected replaceObjectAtIndex:[check index] withObject:[NSNumber numberWithInteger:NSOffState]];
+    else
+        [self.selected replaceObjectAtIndex:[check index] withObject:[NSNumber numberWithInteger:NSOnState]];
+}
+
+- (IBAction)updateTracks:(id)sender
+{
+    // Update informations
+    for(NSInteger i = 0; i < [self.tracks count]; ++i)
+    {
+        NSNumber* s = self.selected[i];
+        if([s integerValue] == NSOffState)
+            continue;
+        
+        iTunesFileTrack* track = self.tracks[i];
+        Music* music = self.album.musics[i];
+        
+        NSLog(@"변경: %@ -> %@", [track name], [music title]);
+        
+        [track setName:[music title]];
+        [track setLyrics:[music lyric]];
+        [track setArtist:[music artist]];
+        [track setGenre:[music genre]];
+        [track setAlbumArtist:[album artist]];
+        [track setYear:[album year]];
     }
 }
 

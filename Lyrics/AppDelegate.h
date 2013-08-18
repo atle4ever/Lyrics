@@ -7,9 +7,18 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import "Album.h"
 
-@interface AppDelegate : NSObject <NSApplicationDelegate>
+@interface AppDelegate : NSObject <NSApplicationDelegate, NSTableViewDataSource, NSTableViewDelegate>
+{
+    Album *album;
+    NSMutableArray *tracks;
+    NSMutableArray *selected;
+}
 
+@property Album* album;
+@property NSMutableArray* tracks;
+@property (copy) IBOutlet NSMutableArray* selected;
 @property (assign) IBOutlet NSWindow *window;
-
+@property (assign) IBOutlet NSTableView *tableView;
 @end

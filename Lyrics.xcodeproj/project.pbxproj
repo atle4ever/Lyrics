@@ -7,8 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DF22D39517BFC5B1008F15A6 /* CustomCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF22D39417BFC5B1008F15A6 /* CustomCell.xib */; };
 		DF5B305117BBC52D004A58B8 /* ScriptingBridge.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF5B305017BBC52D004A58B8 /* ScriptingBridge.framework */; };
 		DF5B305317BBD2B4004A58B8 /* Documentation.rtf in Resources */ = {isa = PBXBuildFile; fileRef = DF5B305217BBD2B4004A58B8 /* Documentation.rtf */; };
+		DF78DAD617C0F01300B53A5C /* CustomCheckBox.m in Sources */ = {isa = PBXBuildFile; fileRef = DF78DAD517C0F01300B53A5C /* CustomCheckBox.m */; };
 		DFC274F317A3F729003D99EA /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFC274F217A3F729003D99EA /* Cocoa.framework */; };
 		DFC274FD17A3F729003D99EA /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = DFC274FB17A3F729003D99EA /* InfoPlist.strings */; };
 		DFC274FF17A3F729003D99EA /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = DFC274FE17A3F729003D99EA /* main.m */; };
@@ -36,9 +38,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		DF22D39417BFC5B1008F15A6 /* CustomCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CustomCell.xib; sourceTree = "<group>"; };
 		DF5B304F17BBC4F3004A58B8 /* iTunes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iTunes.h; sourceTree = "<group>"; };
 		DF5B305017BBC52D004A58B8 /* ScriptingBridge.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ScriptingBridge.framework; path = System/Library/Frameworks/ScriptingBridge.framework; sourceTree = SDKROOT; };
 		DF5B305217BBD2B4004A58B8 /* Documentation.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = Documentation.rtf; sourceTree = "<group>"; };
+		DF78DAD417C0F01300B53A5C /* CustomCheckBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomCheckBox.h; sourceTree = "<group>"; };
+		DF78DAD517C0F01300B53A5C /* CustomCheckBox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomCheckBox.m; sourceTree = "<group>"; };
 		DFC274EF17A3F729003D99EA /* Lyrics.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Lyrics.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DFC274F217A3F729003D99EA /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		DFC274F517A3F729003D99EA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -133,6 +138,9 @@
 				DF5B304F17BBC4F3004A58B8 /* iTunes.h */,
 				DFC2750417A3F729003D99EA /* AppDelegate.h */,
 				DFC2750517A3F729003D99EA /* AppDelegate.m */,
+				DF78DAD417C0F01300B53A5C /* CustomCheckBox.h */,
+				DF78DAD517C0F01300B53A5C /* CustomCheckBox.m */,
+				DF22D39417BFC5B1008F15A6 /* CustomCell.xib */,
 				DFC2750717A3F729003D99EA /* MainMenu.xib */,
 				DFC274F917A3F729003D99EA /* Supporting Files */,
 				DFE1879417AE0CA6002ED7BE /* Music.h */,
@@ -249,6 +257,7 @@
 				DFC2750317A3F729003D99EA /* Credits.rtf in Resources */,
 				DFC2750917A3F729003D99EA /* MainMenu.xib in Resources */,
 				DF5B305317BBD2B4004A58B8 /* Documentation.rtf in Resources */,
+				DF22D39517BFC5B1008F15A6 /* CustomCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -287,6 +296,7 @@
 				DFC2750617A3F729003D99EA /* AppDelegate.m in Sources */,
 				DFE1879617AE0CA6002ED7BE /* Music.m in Sources */,
 				DFE1879A17AE0CBA002ED7BE /* Album.m in Sources */,
+				DF78DAD617C0F01300B53A5C /* CustomCheckBox.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
