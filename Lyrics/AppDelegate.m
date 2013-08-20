@@ -8,154 +8,148 @@
 
 #import "AppDelegate.h"
 #import "iTunes.h"
-#import "Album.h"
-#import "Music.h"
-#import "CustomCheckBox.h"
+#import "RefAlbum.h"
+#import "RefTrack.h"
+#import "UICheckBox.h"
+#import "UILabel.h"
 
 @implementation AppDelegate
 
-@synthesize album;
-@synthesize tracks;
-@synthesize selected;
+@synthesize refAlbum;
+@synthesize myTracks;
+@synthesize willBeUpdated;
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
-    // Get selected tracks
+    // Get my tracks
     iTunesApplication *iTunes = [SBApplication applicationWithBundleIdentifier:@"com.apple.iTunes"];
-    NSArray *sel = [[iTunes selection] get];
-    NSUInteger nSel = [sel count];
+    NSArray *selection = [[iTunes selection] get];
+    NSUInteger nSel = [selection count];
     
-    tracks = [[NSMutableArray alloc] initWithCapacity:nSel];
-    for (iTunesFileTrack* f in sel)
+    myTracks = [[NSMutableArray alloc] initWithCapacity:nSel];
+    for (iTunesFileTrack* track in selection)
     {
-        [tracks addObject:f];
+        [myTracks addObject:track];
     }
     NSSortDescriptor *sortDesc = [[NSSortDescriptor alloc] initWithKey:@"trackNumber" ascending:YES];
     NSArray *sortDescs = [NSArray arrayWithObject:sortDesc];
-    [tracks sortUsingDescriptors:sortDescs];
-    assert(nSel == [tracks count]);
+    [myTracks sortUsingDescriptors:sortDescs];
+    assert(nSel == [myTracks count]);
     
     // Create array for selected
-    selected = [[NSMutableArray alloc] initWithCapacity:nSel];
+    willBeUpdated = [[NSMutableArray alloc] initWithCapacity:nSel];
     for(int i = 0; i < nSel; ++i)
     {
-        [selected addObject:[NSNumber numberWithInt:NSOnState]];
+        [willBeUpdated addObject:[NSNumber numberWithInt:NSOnState]];
     }
     
-    // Get URL of album page from user
-    NSString *urlStr;
+    // Get ref album page's URL from user
+    NSString *refAlbumUrlStr;
     NSAlert *dialog = [NSAlert alertWithMessageText:@"앨범 URL을 입력해주세요." defaultButton:@"확인" alternateButton:@"취소" otherButton:nil informativeTextWithFormat:@"현재 벅스 사이트만 지원합니다."];
-    NSTextField *input = [[NSTextField alloc] initWithFrame:NSMakeRect(0, 0, 300, 24)];
-    [dialog setAccessoryView:input];
-    NSInteger button = [dialog runModal];
-    if (button == NSAlertDefaultReturn)
-    {
-        urlStr = [input stringValue];
-    }
+    NSTextField *userTextInput = [[NSTextField alloc] initWithFrame:NSMakeRect(0, 0, 300, 24)];
+    [dialog setAccessoryView:userTextInput];
+    NSInteger clicked = [dialog runModal];
+    if (clicked == NSAlertDefaultReturn)
+        refAlbumUrlStr = [userTextInput stringValue];
     else
-    {
         return;
-    }
     
     // Get album page
-    NSURL *url = [[NSURL alloc] initWithString:urlStr];
+    NSURL *refAlbumUrl = [[NSURL alloc] initWithString:refAlbumUrlStr];
     NSError *err=nil;
-    NSXMLDocument *xmlDoc = [[NSXMLDocument alloc] initWithContentsOfURL:url
+    NSXMLDocument *refAlbumPage = [[NSXMLDocument alloc] initWithContentsOfURL:refAlbumUrl
                                                                  options:NSXMLDocumentTidyXML
                                                                    error:&err];
     
-    // Get list of song
-    NSArray *nodes = [xmlDoc nodesForXPath:@"//*[@id=\"idTrackList\"]/li" error:&err];
-    assert([tracks count] == [nodes count]);
+    // Get ref album's infos
+    // Track list
+    NSArray *refTrackNodes = [refAlbumPage nodesForXPath:@"//*[@id=\"idTrackList\"]/li" error:&err];
+    assert([myTracks count] == [refTrackNodes count]);
     
-    album = [[Album alloc] initWithTitle:@"test" numOfMusic:[nodes count]];
+    // Title
+    NSArray *nodes = [refAlbumPage nodesForXPath:@"//*[@id=\"container\"]/h2/text()" error:&err];
+    assert([nodes count] == 1);
+    NSString *refAlbumTitle = [nodes[0] description];
     
-    for (NSXMLNode* n in nodes)
+    // Artist
+    nodes = [refAlbumPage nodesForXPath:@"//*[@id=\"content\"]/div[1]/div[2]/div[2]/dl/dd[1]/strong/a/text()" error:&err];
+    if([nodes count] != 1)  // when artist isn't linked
+        nodes = [refAlbumPage nodesForXPath:@"//*[@id=\"content\"]/div[1]/div[2]/div[2]/dl/dd[1]/strong/text()" error:&err];
+    assert([nodes count] == 1);
+    NSString *refAlbumArtist = [nodes[0] description];
+    
+    // Date
+    nodes = [refAlbumPage nodesForXPath:@"//*[@id=\"content\"]/div[1]/div[2]/div[2]/dl/dd[5]/text()" error:&err];
+    assert([nodes count] == 1);
+    NSInteger refAlbumDate = [[[nodes[0] description] substringToIndex:4] integerValue];
+    
+    refAlbum = [[RefAlbum alloc] initWithTitle:refAlbumTitle numOfMusic:[nodes count]];
+    [refAlbum setArtist:refAlbumArtist];
+    [refAlbum setYear:refAlbumDate];
+    
+    // Get ref track's infos
+    for (NSXMLNode* refTrackNode in refTrackNodes)
     {
         // Title
-        NSString* title = [[n nodesForXPath:@"./dl/dt/a/@title" error:&err][0] stringValue];
-        Music *music = [[Music alloc] initWithTitle:title];
+        NSString* title = [[refTrackNode nodesForXPath:@"./dl/dt/a/@title" error:&err][0] stringValue];
+        RefTrack *refTrack = [[RefTrack alloc] initWithTitle:title];
         
+        // Get ref track page
+        NSString* hrefStr = [[refTrackNode nodesForXPath:@"./dl/dt/a/@href" error:&err][0] stringValue];
+        NSString* refTrackId = [[NSNumber numberWithInteger:[[hrefStr substringWithRange:NSMakeRange(35, 9)] integerValue]] stringValue];
+        NSString* refTrackUrlStr = [NSString stringWithFormat:@"http://music.bugs.co.kr/track/%@", refTrackId];
+        NSURL *refTrackUrl = [[NSURL alloc] initWithString:refTrackUrlStr];
         
-        // Lyric
-        NSString* hrefStr = [[n nodesForXPath:@"./dl/dt/a/@href" error:&err][0] stringValue];
-        NSString* musicId = [[NSNumber numberWithInteger:[[hrefStr substringWithRange:NSMakeRange(35, 9)] integerValue]] stringValue];
-        NSString* musicUrlStr = [NSString stringWithFormat:@"http://music.bugs.co.kr/track/%@", musicId];
-        NSURL *musicUrl = [[NSURL alloc] initWithString:musicUrlStr];
-        
-        NSXMLDocument *musicPage = [[NSXMLDocument alloc] initWithContentsOfURL:musicUrl
+        NSXMLDocument *refTrackPage = [[NSXMLDocument alloc] initWithContentsOfURL:refTrackUrl
                                                                         options:NSXMLDocumentTidyXML
                                                                           error:&err];
         
-        NSArray *nodes = [musicPage nodesForXPath:@"//*[@id=\"content\"]/div[2]/p" error:&err];
-        if([nodes count] > 0)
+        // Lyric
+        NSArray *refTrackLyricNodes = [refTrackPage nodesForXPath:@"//*[@id=\"content\"]/div[2]/p" error:&err];
+        if([refTrackLyricNodes count] > 0)
         {
-            assert([nodes count] == 1);
-            NSXMLNode *n = nodes[0];
+            assert([refTrackLyricNodes count] == 1);
+            NSXMLNode *n = refTrackLyricNodes[0];
             NSArray *lines = [n children];
             
-            NSMutableString* lyric = [NSMutableString string];
+            NSMutableString* lyrics = [NSMutableString string];
             for(NSXMLNode *l in lines)
             {
                 NSString* str = [l description];
                 if([str compare:@"<br></br>"] == 0)
-                {
-                    [lyric appendString:@"\n"];
-                }
+                    [lyrics appendString:@"\n"];
                 else
-                {
-                    [lyric appendString:str];
-                }
+                    [lyrics appendString:str];
             }
-            [music setLyric:lyric];
+            NSString *trimedLyrics = [lyrics stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+            [refTrack setLyrics:trimedLyrics];
         }
         else
-        {
-            [music setLyric:@""];
-        }
+            [refTrack setLyrics:@""];
         
         // Artist
-        nodes = [musicPage nodesForXPath:@"//*[@id=\"content\"]/div[1]/div[2]/div[2]/div/dl/dd[1]/strong/a/text()" error:&err];
+        NSArray *nodes = [refTrackPage nodesForXPath:@"//*[@id=\"content\"]/div[1]/div[2]/div[2]/div/dl/dd[1]/strong/a/text()" error:&err];
         if([nodes count] != 1) // when artist isn't linked
-            nodes = [musicPage nodesForXPath:@"//*[@id=\"content\"]/div[1]/div[2]/div[2]/div/dl/dd[1]/strong/text()" error:&err];
+            nodes = [refTrackPage nodesForXPath:@"//*[@id=\"content\"]/div[1]/div[2]/div[2]/div/dl/dd[1]/strong/text()" error:&err];
         assert([nodes count] == 1);
-        [music setArtist:[nodes[0] description]];
+        [refTrack setArtist:[nodes[0] description]];
         
         // Genre
-        nodes = [musicPage nodesForXPath:@"//*[@id=\"content\"]/div[1]/div[2]/div[2]/div/dl/dd[3]/text()" error:&err];
+        nodes = [refTrackPage nodesForXPath:@"//*[@id=\"content\"]/div[1]/div[2]/div[2]/div/dl/dd[3]/text()" error:&err];
         assert([nodes count] == 1);
-        [music setGenre:[nodes[0] description]];
+        [refTrack setGenre:[nodes[0] description]];
         
-        [album.musics addObject:music];
+        [refAlbum.refTracks addObject:refTrack];
     }
-    
-    // Get album artist
-    nodes = [xmlDoc nodesForXPath:@"//*[@id=\"content\"]/div[1]/div[2]/div[2]/dl/dd[1]/strong/a/text()" error:&err];
-    if([nodes count] != 1)  // when artist isn't linked
-        nodes = [xmlDoc nodesForXPath:@"//*[@id=\"content\"]/div[1]/div[2]/div[2]/dl/dd[1]/strong/text()" error:&err];
-    assert([nodes count] == 1);
-    [album setArtist:[nodes[0] description]];
-    
-    // Get issue date
-    nodes = [xmlDoc nodesForXPath:@"//*[@id=\"content\"]/div[1]/div[2]/div[2]/dl/dd[5]/text()" error:&err];
-    assert([nodes count] == 1);
-    [album setYear:[[[nodes[0] description] substringToIndex:4] integerValue]];
     
     [self.tableView reloadData];
 }
 
-#pragma mark - NSTableViewDataSource
+
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)aTableView
 {
-    return [album.musics count];
-}
-
-
-
-- (id) tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
-{
-   return @"test";
+    return [refAlbum.refTracks count];
 }
 
 - (NSView *) tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
@@ -164,44 +158,35 @@
     
     if (result == nil) {
         result = [[NSTableCellView alloc] initWithFrame:NSMakeRect(0, 0, 418, 82)];
-        [result setBackgroundStyle:NSBackgroundStyleRaised];
+        [result setIdentifier:@"CustomCell"];
         
-        CustomCheckBox* check = [[CustomCheckBox alloc] initWithFrame:NSMakeRect(18, 32, 22, 18)];
-        [check setButtonType:NSSwitchButton];
+        UICheckBox* check = [[UICheckBox alloc] initWithFrame:NSMakeRect(18, 32, 22, 18)];
         [check setTag:10];
         [result addSubview:check];
         
-        NSTextField *label1 = [[NSTextField alloc] initWithFrame:NSMakeRect(44, 45, 356, 17)];
-        [label1 setBezeled:NO];
-        [label1 setDrawsBackground:NO];
-        [label1 setEditable:NO];
-        [label1 setSelectable:NO];
+        UILabel *label1 = [[UILabel alloc] initWithFrame:NSMakeRect(44, 45, 356, 17)];
         [label1 setTag:11];
         [result addSubview:label1];
         
-        NSTextField *label2 = [[NSTextField alloc] initWithFrame:NSMakeRect(44, 22, 356, 17)];
-        [label2 setBezeled:NO];
-        [label2 setDrawsBackground:NO];
-        [label2 setEditable:NO];
-        [label2 setSelectable:NO];
+        UILabel *label2 = [[UILabel alloc] initWithFrame:NSMakeRect(44, 22, 356, 17)];
         [label2 setTag:12];
         [result addSubview:label2];
     }
-    iTunesFileTrack* track = self.tracks[row];
-    Music *music = self.album.musics[row];
-    NSNumber *select = self.selected[row];
+    iTunesFileTrack* track = self.myTracks[row];
+    RefTrack *music = self.refAlbum.refTracks[row];
+    NSNumber *select = self.willBeUpdated[row];
     
-    CustomCheckBox *check = [result viewWithTag:10];
+    UICheckBox *check = [result viewWithTag:10];
     [check setIndex:row];
     [check setState:[select integerValue]];
     [check setTarget:self];
-    [check setAction:@selector(performClick:)];
+    [check setAction:@selector(clickCheckBox:)];
     
-    NSTextField *label1 = [result viewWithTag:11];
+    UILabel *label1 = [result viewWithTag:11];
     [label1 setStringValue:[track name]];
     
-    NSTextField *label2 = [result viewWithTag:12];
-    [label2 setStringValue:[music title]];
+    UILabel *label2 = [result viewWithTag:12];
+    [label2 setStringValue:[music name]];
     
     return result;
 }
@@ -211,36 +196,39 @@
     return 82;
 }
 
-- (IBAction) performClick:(id)sender
+
+
+- (IBAction) clickCheckBox:(id)sender
 {
-    CustomCheckBox *check = sender;
-    NSNumber* s = self.selected[[check index]];
-    if([s integerValue] == NSOnState)
-        [self.selected replaceObjectAtIndex:[check index] withObject:[NSNumber numberWithInteger:NSOffState]];
+    UICheckBox *check = sender;
+    NSNumber* flag = self.willBeUpdated[[check index]];
+    if([flag integerValue] == NSOnState)
+        [self.willBeUpdated replaceObjectAtIndex:[check index] withObject:[NSNumber numberWithInteger:NSOffState]];
     else
-        [self.selected replaceObjectAtIndex:[check index] withObject:[NSNumber numberWithInteger:NSOnState]];
+        [self.willBeUpdated replaceObjectAtIndex:[check index] withObject:[NSNumber numberWithInteger:NSOnState]];
 }
 
 - (IBAction)updateTracks:(id)sender
 {
     // Update informations
-    for(NSInteger i = 0; i < [self.tracks count]; ++i)
+    for(NSInteger i = 0; i < [self.myTracks count]; ++i)
     {
-        NSNumber* s = self.selected[i];
-        if([s integerValue] == NSOffState)
+        NSNumber* flag = self.willBeUpdated[i];
+        if([flag integerValue] == NSOffState)
             continue;
         
-        iTunesFileTrack* track = self.tracks[i];
-        Music* music = self.album.musics[i];
+        iTunesFileTrack* myTrack = self.myTracks[i];
+        RefTrack* refTrack = self.refAlbum.refTracks[i];
         
-        NSLog(@"변경: %@ -> %@", [track name], [music title]);
+        NSLog(@"변경: %@ -> %@", [myTrack name], [refTrack name]);
         
-        [track setName:[music title]];
-        [track setLyrics:[music lyric]];
-        [track setArtist:[music artist]];
-        [track setGenre:[music genre]];
-        [track setAlbumArtist:[album artist]];
-        [track setYear:[album year]];
+        [myTrack setName:[refTrack name]];
+        [myTrack setLyrics:[refTrack lyrics]];
+        [myTrack setArtist:[refTrack artist]];
+        [myTrack setGenre:[refTrack genre]];
+        [myTrack setAlbumArtist:[refAlbum artist]];
+        [myTrack setYear:[refAlbum year]];
+        [myTrack setAlbum:[refAlbum name]];
     }
 }
 

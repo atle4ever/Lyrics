@@ -7,18 +7,18 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import "Album.h"
+#import "RefAlbum.h"
 
 @interface AppDelegate : NSObject <NSApplicationDelegate, NSTableViewDataSource, NSTableViewDelegate>
 {
-    Album *album;
-    NSMutableArray *tracks;
-    NSMutableArray *selected;
+    RefAlbum *refAlbum;
+    NSMutableArray *myTracks;
+    NSMutableArray *willBeUpdated;
 }
 
-@property Album* album;
-@property NSMutableArray* tracks;
-@property (copy) IBOutlet NSMutableArray* selected;
+@property RefAlbum* refAlbum;
+@property NSMutableArray* myTracks;
+@property (copy) IBOutlet NSMutableArray* willBeUpdated;
 @property (assign) IBOutlet NSWindow *window;
 @property (assign) IBOutlet NSTableView *tableView;
 @end

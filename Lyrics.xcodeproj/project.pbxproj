@@ -10,7 +10,7 @@
 		DF22D39517BFC5B1008F15A6 /* CustomCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF22D39417BFC5B1008F15A6 /* CustomCell.xib */; };
 		DF5B305117BBC52D004A58B8 /* ScriptingBridge.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF5B305017BBC52D004A58B8 /* ScriptingBridge.framework */; };
 		DF5B305317BBD2B4004A58B8 /* Documentation.rtf in Resources */ = {isa = PBXBuildFile; fileRef = DF5B305217BBD2B4004A58B8 /* Documentation.rtf */; };
-		DF78DAD617C0F01300B53A5C /* CustomCheckBox.m in Sources */ = {isa = PBXBuildFile; fileRef = DF78DAD517C0F01300B53A5C /* CustomCheckBox.m */; };
+		DF78DAD617C0F01300B53A5C /* UICheckBox.m in Sources */ = {isa = PBXBuildFile; fileRef = DF78DAD517C0F01300B53A5C /* UICheckBox.m */; };
 		DFC274F317A3F729003D99EA /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFC274F217A3F729003D99EA /* Cocoa.framework */; };
 		DFC274FD17A3F729003D99EA /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = DFC274FB17A3F729003D99EA /* InfoPlist.strings */; };
 		DFC274FF17A3F729003D99EA /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = DFC274FE17A3F729003D99EA /* main.m */; };
@@ -21,10 +21,11 @@
 		DFC2751217A3F72A003D99EA /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFC274F217A3F729003D99EA /* Cocoa.framework */; };
 		DFC2751A17A3F72A003D99EA /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = DFC2751817A3F72A003D99EA /* InfoPlist.strings */; };
 		DFC2751D17A3F72A003D99EA /* LyricsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DFC2751C17A3F72A003D99EA /* LyricsTests.m */; };
-		DFE1879617AE0CA6002ED7BE /* Music.m in Sources */ = {isa = PBXBuildFile; fileRef = DFE1879517AE0CA6002ED7BE /* Music.m */; };
-		DFE1879717AE0CA6002ED7BE /* Music.m in Sources */ = {isa = PBXBuildFile; fileRef = DFE1879517AE0CA6002ED7BE /* Music.m */; };
-		DFE1879A17AE0CBA002ED7BE /* Album.m in Sources */ = {isa = PBXBuildFile; fileRef = DFE1879917AE0CBA002ED7BE /* Album.m */; };
-		DFE1879B17AE0CBA002ED7BE /* Album.m in Sources */ = {isa = PBXBuildFile; fileRef = DFE1879917AE0CBA002ED7BE /* Album.m */; };
+		DFE1879617AE0CA6002ED7BE /* RefTrack.m in Sources */ = {isa = PBXBuildFile; fileRef = DFE1879517AE0CA6002ED7BE /* RefTrack.m */; };
+		DFE1879717AE0CA6002ED7BE /* RefTrack.m in Sources */ = {isa = PBXBuildFile; fileRef = DFE1879517AE0CA6002ED7BE /* RefTrack.m */; };
+		DFE1879A17AE0CBA002ED7BE /* RefAlbum.m in Sources */ = {isa = PBXBuildFile; fileRef = DFE1879917AE0CBA002ED7BE /* RefAlbum.m */; };
+		DFE1879B17AE0CBA002ED7BE /* RefAlbum.m in Sources */ = {isa = PBXBuildFile; fileRef = DFE1879917AE0CBA002ED7BE /* RefAlbum.m */; };
+		DFF4A23817C32BB300E4D58C /* UILabel.m in Sources */ = {isa = PBXBuildFile; fileRef = DFF4A23717C32BB300E4D58C /* UILabel.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,8 +43,8 @@
 		DF5B304F17BBC4F3004A58B8 /* iTunes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iTunes.h; sourceTree = "<group>"; };
 		DF5B305017BBC52D004A58B8 /* ScriptingBridge.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ScriptingBridge.framework; path = System/Library/Frameworks/ScriptingBridge.framework; sourceTree = SDKROOT; };
 		DF5B305217BBD2B4004A58B8 /* Documentation.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = Documentation.rtf; sourceTree = "<group>"; };
-		DF78DAD417C0F01300B53A5C /* CustomCheckBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomCheckBox.h; sourceTree = "<group>"; };
-		DF78DAD517C0F01300B53A5C /* CustomCheckBox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomCheckBox.m; sourceTree = "<group>"; };
+		DF78DAD417C0F01300B53A5C /* UICheckBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UICheckBox.h; sourceTree = "<group>"; };
+		DF78DAD517C0F01300B53A5C /* UICheckBox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UICheckBox.m; sourceTree = "<group>"; };
 		DFC274EF17A3F729003D99EA /* Lyrics.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Lyrics.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DFC274F217A3F729003D99EA /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		DFC274F517A3F729003D99EA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -63,10 +64,12 @@
 		DFC2751917A3F72A003D99EA /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		DFC2751B17A3F72A003D99EA /* LyricsTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LyricsTests.h; sourceTree = "<group>"; };
 		DFC2751C17A3F72A003D99EA /* LyricsTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LyricsTests.m; sourceTree = "<group>"; };
-		DFE1879417AE0CA6002ED7BE /* Music.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Music.h; sourceTree = "<group>"; };
-		DFE1879517AE0CA6002ED7BE /* Music.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Music.m; sourceTree = "<group>"; };
-		DFE1879817AE0CBA002ED7BE /* Album.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Album.h; sourceTree = "<group>"; };
-		DFE1879917AE0CBA002ED7BE /* Album.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Album.m; sourceTree = "<group>"; };
+		DFE1879417AE0CA6002ED7BE /* RefTrack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RefTrack.h; sourceTree = "<group>"; };
+		DFE1879517AE0CA6002ED7BE /* RefTrack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RefTrack.m; sourceTree = "<group>"; };
+		DFE1879817AE0CBA002ED7BE /* RefAlbum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RefAlbum.h; sourceTree = "<group>"; };
+		DFE1879917AE0CBA002ED7BE /* RefAlbum.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RefAlbum.m; sourceTree = "<group>"; };
+		DFF4A23617C32BB300E4D58C /* UILabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UILabel.h; sourceTree = "<group>"; };
+		DFF4A23717C32BB300E4D58C /* UILabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UILabel.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -138,15 +141,17 @@
 				DF5B304F17BBC4F3004A58B8 /* iTunes.h */,
 				DFC2750417A3F729003D99EA /* AppDelegate.h */,
 				DFC2750517A3F729003D99EA /* AppDelegate.m */,
-				DF78DAD417C0F01300B53A5C /* CustomCheckBox.h */,
-				DF78DAD517C0F01300B53A5C /* CustomCheckBox.m */,
+				DFF4A23617C32BB300E4D58C /* UILabel.h */,
+				DFF4A23717C32BB300E4D58C /* UILabel.m */,
+				DF78DAD417C0F01300B53A5C /* UICheckBox.h */,
+				DF78DAD517C0F01300B53A5C /* UICheckBox.m */,
 				DF22D39417BFC5B1008F15A6 /* CustomCell.xib */,
 				DFC2750717A3F729003D99EA /* MainMenu.xib */,
 				DFC274F917A3F729003D99EA /* Supporting Files */,
-				DFE1879417AE0CA6002ED7BE /* Music.h */,
-				DFE1879517AE0CA6002ED7BE /* Music.m */,
-				DFE1879817AE0CBA002ED7BE /* Album.h */,
-				DFE1879917AE0CBA002ED7BE /* Album.m */,
+				DFE1879417AE0CA6002ED7BE /* RefTrack.h */,
+				DFE1879517AE0CA6002ED7BE /* RefTrack.m */,
+				DFE1879817AE0CBA002ED7BE /* RefAlbum.h */,
+				DFE1879917AE0CBA002ED7BE /* RefAlbum.m */,
 			);
 			path = Lyrics;
 			sourceTree = "<group>";
@@ -294,9 +299,10 @@
 			files = (
 				DFC274FF17A3F729003D99EA /* main.m in Sources */,
 				DFC2750617A3F729003D99EA /* AppDelegate.m in Sources */,
-				DFE1879617AE0CA6002ED7BE /* Music.m in Sources */,
-				DFE1879A17AE0CBA002ED7BE /* Album.m in Sources */,
-				DF78DAD617C0F01300B53A5C /* CustomCheckBox.m in Sources */,
+				DFE1879617AE0CA6002ED7BE /* RefTrack.m in Sources */,
+				DFE1879A17AE0CBA002ED7BE /* RefAlbum.m in Sources */,
+				DF78DAD617C0F01300B53A5C /* UICheckBox.m in Sources */,
+				DFF4A23817C32BB300E4D58C /* UILabel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -305,8 +311,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				DFC2751D17A3F72A003D99EA /* LyricsTests.m in Sources */,
-				DFE1879717AE0CA6002ED7BE /* Music.m in Sources */,
-				DFE1879B17AE0CBA002ED7BE /* Album.m in Sources */,
+				DFE1879717AE0CA6002ED7BE /* RefTrack.m in Sources */,
+				DFE1879B17AE0CBA002ED7BE /* RefAlbum.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
