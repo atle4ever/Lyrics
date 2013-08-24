@@ -21,4 +21,7 @@
 @property (copy) IBOutlet NSMutableArray* willBeUpdated;
 @property (assign) IBOutlet NSWindow *window;
 @property (assign) IBOutlet NSTableView *tableView;
+
+- (void)displayErrorMsgOfItunesSelection:(NSString*) msg;
+- (void)getMyTracksFromItunes;
 @end

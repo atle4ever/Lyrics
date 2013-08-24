@@ -21,6 +21,6 @@
 @property NSString* artist;
 @property NSInteger year;
 
-- (id)initWithTitle:(NSString*)aTitle numOfMusic:(NSUInteger)num;
+- (id)initWithName:(NSString*)aName numOfMusic:(NSUInteger)num;
 
 @end

@@ -21,7 +21,7 @@
 @property NSString* artist;
 @property NSString* genre;
 
-- (id)initWithTitle:(NSString*)aTitle;
+- (id)initWithName:(NSString*)aName;
 
 
 @end

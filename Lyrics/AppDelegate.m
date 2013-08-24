@@ -19,22 +19,69 @@
 @synthesize myTracks;
 @synthesize willBeUpdated;
 
+- (void)displayErrorMsgOfItunesSelection:(NSString*) msg
+{
+    NSAlert *dialog = [NSAlert alertWithMessageText:msg defaultButton:@"다시 시도" alternateButton:@"종료" otherButton:nil informativeTextWithFormat:@""];
+    if([dialog runModal] != NSAlertDefaultReturn)
+        [[NSApplication sharedApplication] terminate:nil];
+}
+
+- (void)getMyTracksFromItunes
+{
+    iTunesApplication *iTunes = [SBApplication applicationWithBundleIdentifier:@"com.apple.iTunes"];
+    while(true)
+    {
+        myTracks = [[iTunes selection] get];
+        if([myTracks count] == 0)
+        {
+            [self displayErrorMsgOfItunesSelection:@"아이튠즈에서 업데이트할 곡을 선택해주세요."];
+            continue;
+        }
+        
+        // 모든 곡이 동일한 앨범에 속해 있는지 확인
+        bool isSomeError = true;
+        NSString *albumTitle = [[myTracks objectAtIndex:0] album];
+        for (iTunesFileTrack *track in myTracks)
+        {
+            if([[track album] compare:albumTitle] != 0)
+            {
+                isSomeError = false;
+                [self displayErrorMsgOfItunesSelection:@"같은 앨범의 곡을 선택해주세요."];
+                break;
+            }
+        }
+        if(isSomeError == false) continue;
+        
+        // Sort tracks by track no.
+        NSSortDescriptor *sortDesc = [[NSSortDescriptor alloc] initWithKey:@"trackNumber" ascending:YES];
+        NSArray *sortDescs = [NSArray arrayWithObject:sortDesc];
+        [myTracks sortUsingDescriptors:sortDescs];
+        
+        // 모든 곡이 올바른 트백 번호를 가지고 있는지 확인
+        NSInteger prevTrackNum = 0;
+        for (iTunesFileTrack *track in myTracks)
+        {
+            if([track trackNumber] != prevTrackNum + 1)
+            {
+                
+                isSomeError = false;
+                NSString *errMsg = [NSString stringWithFormat:@"'%@'의 트랙 번호가 올바르지 않습니다.", [track name]];
+                [self displayErrorMsgOfItunesSelection:errMsg];
+                break;
+            }
+            prevTrackNum += 1;
+        }
+        if(isSomeError == false) continue;
+        
+        break;
+    }
+}
+
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
-    // Get my tracks
-    iTunesApplication *iTunes = [SBApplication applicationWithBundleIdentifier:@"com.apple.iTunes"];
-    NSArray *selection = [[iTunes selection] get];
-    NSUInteger nSel = [selection count];
+    [self getMyTracksFromItunes];
     
-    myTracks = [[NSMutableArray alloc] initWithCapacity:nSel];
-    for (iTunesFileTrack* track in selection)
-    {
-        [myTracks addObject:track];
-    }
-    NSSortDescriptor *sortDesc = [[NSSortDescriptor alloc] initWithKey:@"trackNumber" ascending:YES];
-    NSArray *sortDescs = [NSArray arrayWithObject:sortDesc];
-    [myTracks sortUsingDescriptors:sortDescs];
-    assert(nSel == [myTracks count]);
+    NSInteger nSel = [self.myTracks count];
     
     // Create array for selected
     willBeUpdated = [[NSMutableArray alloc] initWithCapacity:nSel];
@@ -69,7 +116,7 @@
     // Title
     NSArray *nodes = [refAlbumPage nodesForXPath:@"//*[@id=\"container\"]/h2/text()" error:&err];
     assert([nodes count] == 1);
-    NSString *refAlbumTitle = [nodes[0] description];
+    NSString *refAlbumName = [nodes[0] description];
     
     // Artist
     nodes = [refAlbumPage nodesForXPath:@"//*[@id=\"content\"]/div[1]/div[2]/div[2]/dl/dd[1]/strong/a/text()" error:&err];
@@ -83,7 +130,7 @@
     assert([nodes count] == 1);
     NSInteger refAlbumDate = [[[nodes[0] description] substringToIndex:4] integerValue];
     
-    refAlbum = [[RefAlbum alloc] initWithTitle:refAlbumTitle numOfMusic:[nodes count]];
+    refAlbum = [[RefAlbum alloc] initWithName:refAlbumName numOfMusic:[nodes count]];
     [refAlbum setArtist:refAlbumArtist];
     [refAlbum setYear:refAlbumDate];
     
@@ -91,8 +138,8 @@
     for (NSXMLNode* refTrackNode in refTrackNodes)
     {
         // Title
-        NSString* title = [[refTrackNode nodesForXPath:@"./dl/dt/a/@title" error:&err][0] stringValue];
-        RefTrack *refTrack = [[RefTrack alloc] initWithTitle:title];
+        NSString* name = [[refTrackNode nodesForXPath:@"./dl/dt/a/@title" error:&err][0] stringValue];
+        RefTrack *refTrack = [[RefTrack alloc] initWithName:name];
         
         // Get ref track page
         NSString* hrefStr = [[refTrackNode nodesForXPath:@"./dl/dt/a/@href" error:&err][0] stringValue];

@@ -16,11 +16,11 @@
 @synthesize year;
 
 
-- (id)initWithTitle:(NSString *)aTitle numOfMusic:(NSUInteger)num
+- (id)initWithName:(NSString *)aName numOfMusic:(NSUInteger)num
 {
     self = [super init];
     
-    [self setName:[aTitle copy]];
+    [self setName:[aName copy]];
     
     [self setRefTracks:[[NSMutableArray alloc] initWithCapacity:num]];
     

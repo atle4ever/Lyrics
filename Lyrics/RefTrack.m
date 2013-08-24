@@ -15,17 +15,17 @@
 @synthesize artist;
 @synthesize genre;
 
-- (id) initWithTitle:(NSString *)aTitle
+- (id) initWithName:(NSString *)aName
 {
     self = [super init];
-    [self setName:[aTitle copy]];
+    [self setName:[aName copy]];
     
     return self;
 }
 
 - (NSString*)description
 {
-    NSString *desc = [NSString stringWithFormat:@"Title: %@\nArtist: %@, Genre: %@\nLyrics\n%@", self.name, self.artist, self.genre, self.lyrics];
+    NSString *desc = [NSString stringWithFormat:@"Name: %@\nArtist: %@, Genre: %@\nLyrics\n%@", self.name, self.artist, self.genre, self.lyrics];
     return desc;
 }
 
