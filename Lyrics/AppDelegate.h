@@ -8,6 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import "RefAlbum.h"
+#import "RefTrack.h"
 
 @interface AppDelegate : NSObject <NSApplicationDelegate, NSTableViewDataSource, NSTableViewDelegate>
 {
@@ -24,4 +25,6 @@
 
 - (void)displayErrorMsgOfItunesSelection:(NSString*) msg;
 - (void)getMyTracksFromItunes;
+- (RefAlbum*)getRefAlbumFromWeb:(NSString*)refAlbumUrlStr;
+- (void)getRefTrackFromWeb:(RefTrack*)refTrack withUrl:(NSString*)refTrackUrlStr toRefAlbum:(RefAlbum*)refAlbum;
 @end

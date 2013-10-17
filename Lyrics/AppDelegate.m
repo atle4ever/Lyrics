@@ -77,31 +77,58 @@
     }
 }
 
-- (void)applicationDidFinishLaunching:(NSNotification *)aNotification
+- (void)getRefTrackFromWeb:(RefTrack*)refTrack withUrl:(NSString*)refTrackUrlStr toRefAlbum:(RefAlbum*)newRefAlbum
 {
-    [self getMyTracksFromItunes];
+    NSError* err = nil;
     
-    NSInteger nSel = [self.myTracks count];
+    NSURL *refTrackUrl = [[NSURL alloc] initWithString:refTrackUrlStr];
     
-    // Create array for selected
-    willBeUpdated = [[NSMutableArray alloc] initWithCapacity:nSel];
-    for(int i = 0; i < nSel; ++i)
+    NSXMLDocument *refTrackPage = [[NSXMLDocument alloc] initWithContentsOfURL:refTrackUrl
+                                                                       options:NSXMLDocumentTidyXML
+                                                                         error:&err];
+    
+    // Lyric
+    NSArray *refTrackLyricNodes = [refTrackPage nodesForXPath:@"//*[@id=\"content\"]/div[2]/p" error:&err];
+    if([refTrackLyricNodes count] > 0)
     {
-        [willBeUpdated addObject:[NSNumber numberWithInt:NSOnState]];
+        assert([refTrackLyricNodes count] == 1);
+        NSXMLNode *n = refTrackLyricNodes[0];
+        NSArray *lines = [n children];
+        
+        NSMutableString* lyrics = [NSMutableString string];
+        for(NSXMLNode *l in lines)
+        {
+            NSString* str = [l description];
+            if([str compare:@"<br></br>"] == 0)
+                [lyrics appendString:@"\n"];
+            else
+                [lyrics appendString:str];
+        }
+        NSString *trimedLyrics = [lyrics stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+        [refTrack setLyrics:trimedLyrics];
     }
-    
-    // Get ref album page's URL from user
-    NSString *refAlbumUrlStr;
-    NSAlert *dialog = [NSAlert alertWithMessageText:@"앨범 URL을 입력해주세요." defaultButton:@"확인" alternateButton:@"취소" otherButton:nil informativeTextWithFormat:@"현재 벅스 사이트만 지원합니다."];
-    NSTextField *userTextInput = [[NSTextField alloc] initWithFrame:NSMakeRect(0, 0, 300, 24)];
-    [dialog setAccessoryView:userTextInput];
-    NSInteger clicked = [dialog runModal];
-    if (clicked == NSAlertDefaultReturn)
-        refAlbumUrlStr = [userTextInput stringValue];
     else
-        return;
+        [refTrack setLyrics:@""];
     
-    // Get album page
+    // Artist
+    NSArray *nodes = [refTrackPage nodesForXPath:@"//*[@id=\"content\"]/div[1]/div[2]/div[2]/div/dl/dd[1]/strong/a/text()" error:&err];
+    if([nodes count] != 1) // when artist isn't linked
+        nodes = [refTrackPage nodesForXPath:@"//*[@id=\"content\"]/div[1]/div[2]/div[2]/div/dl/dd[1]/strong/text()" error:&err];
+    assert([nodes count] == 1);
+    [refTrack setArtist:[nodes[0] description]];
+    
+    // Genre
+    nodes = [refTrackPage nodesForXPath:@"//*[@id=\"content\"]/div[1]/div[2]/div[2]/div/dl/dd[3]/text()" error:&err];
+    if([nodes count] == 0)
+        [refTrack setGenre:@""];
+    else
+        [refTrack setGenre:[nodes[0] description]];
+    
+    [newRefAlbum.refTracks addObject:refTrack];
+}
+
+- (RefAlbum*)getRefAlbumFromWeb:(NSString*)refAlbumUrlStr
+{
     NSURL *refAlbumUrl = [[NSURL alloc] initWithString:refAlbumUrlStr];
     NSError *err=nil;
     NSXMLDocument *refAlbumPage = [[NSXMLDocument alloc] initWithContentsOfURL:refAlbumUrl
@@ -130,9 +157,9 @@
     assert([nodes count] == 1);
     NSInteger refAlbumDate = [[[nodes[0] description] substringToIndex:4] integerValue];
     
-    refAlbum = [[RefAlbum alloc] initWithName:refAlbumName numOfMusic:[nodes count]];
-    [refAlbum setArtist:refAlbumArtist];
-    [refAlbum setYear:refAlbumDate];
+    RefAlbum* newRefAlbum = [[RefAlbum alloc] initWithName:refAlbumName numOfMusic:[nodes count]];
+    [newRefAlbum setArtist:refAlbumArtist];
+    [newRefAlbum setYear:refAlbumDate];
     
     // Get ref track's infos
     for (NSXMLNode* refTrackNode in refTrackNodes)
@@ -145,49 +172,36 @@
         NSString* hrefStr = [[refTrackNode nodesForXPath:@"./dl/dt/a/@href" error:&err][0] stringValue];
         NSString* refTrackId = [[NSNumber numberWithInteger:[[hrefStr substringWithRange:NSMakeRange(35, 9)] integerValue]] stringValue];
         NSString* refTrackUrlStr = [NSString stringWithFormat:@"http://music.bugs.co.kr/track/%@", refTrackId];
-        NSURL *refTrackUrl = [[NSURL alloc] initWithString:refTrackUrlStr];
-        
-        NSXMLDocument *refTrackPage = [[NSXMLDocument alloc] initWithContentsOfURL:refTrackUrl
-                                                                        options:NSXMLDocumentTidyXML
-                                                                          error:&err];
-        
-        // Lyric
-        NSArray *refTrackLyricNodes = [refTrackPage nodesForXPath:@"//*[@id=\"content\"]/div[2]/p" error:&err];
-        if([refTrackLyricNodes count] > 0)
-        {
-            assert([refTrackLyricNodes count] == 1);
-            NSXMLNode *n = refTrackLyricNodes[0];
-            NSArray *lines = [n children];
-            
-            NSMutableString* lyrics = [NSMutableString string];
-            for(NSXMLNode *l in lines)
-            {
-                NSString* str = [l description];
-                if([str compare:@"<br></br>"] == 0)
-                    [lyrics appendString:@"\n"];
-                else
-                    [lyrics appendString:str];
-            }
-            NSString *trimedLyrics = [lyrics stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-            [refTrack setLyrics:trimedLyrics];
-        }
-        else
-            [refTrack setLyrics:@""];
-        
-        // Artist
-        NSArray *nodes = [refTrackPage nodesForXPath:@"//*[@id=\"content\"]/div[1]/div[2]/div[2]/div/dl/dd[1]/strong/a/text()" error:&err];
-        if([nodes count] != 1) // when artist isn't linked
-            nodes = [refTrackPage nodesForXPath:@"//*[@id=\"content\"]/div[1]/div[2]/div[2]/div/dl/dd[1]/strong/text()" error:&err];
-        assert([nodes count] == 1);
-        [refTrack setArtist:[nodes[0] description]];
-        
-        // Genre
-        nodes = [refTrackPage nodesForXPath:@"//*[@id=\"content\"]/div[1]/div[2]/div[2]/div/dl/dd[3]/text()" error:&err];
-        assert([nodes count] == 1);
-        [refTrack setGenre:[nodes[0] description]];
-        
-        [refAlbum.refTracks addObject:refTrack];
+        [self getRefTrackFromWeb:refTrack withUrl:refTrackUrlStr toRefAlbum:newRefAlbum];
     }
+    
+    return newRefAlbum;
+}
+
+- (void)applicationDidFinishLaunching:(NSNotification *)aNotification
+{
+    [self getMyTracksFromItunes];
+    
+    NSInteger nSel = [self.myTracks count];
+    
+    // Create array for selected
+    willBeUpdated = [[NSMutableArray alloc] initWithCapacity:nSel];
+    for(int i = 0; i < nSel; ++i)
+        [willBeUpdated addObject:[NSNumber numberWithInt:NSOnState]];
+    
+    // Get ref album page's URL from user
+    NSString *refAlbumUrlStr;
+    NSAlert *dialog = [NSAlert alertWithMessageText:@"앨범 URL을 입력해주세요." defaultButton:@"확인" alternateButton:@"취소" otherButton:nil informativeTextWithFormat:@"현재 벅스 사이트만 지원합니다."];
+    NSTextField *userTextInput = [[NSTextField alloc] initWithFrame:NSMakeRect(0, 0, 300, 24)];
+    [dialog setAccessoryView:userTextInput];
+    NSInteger clicked = [dialog runModal];
+    if (clicked == NSAlertDefaultReturn)
+        refAlbumUrlStr = [userTextInput stringValue];
+    else
+        return;
+    
+    // Get album page
+    [self setRefAlbum:[self getRefAlbumFromWeb:refAlbumUrlStr]];
     
     [self.tableView reloadData];
 }
