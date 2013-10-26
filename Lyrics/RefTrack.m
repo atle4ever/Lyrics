@@ -14,6 +14,7 @@
 @synthesize lyrics;
 @synthesize artist;
 @synthesize genre;
+@synthesize discNumber;
 @synthesize trackNumber;
 
 - (id) initWithName:(NSString *)aName
@@ -26,7 +27,7 @@
 
 - (NSString*)description
 {
-    NSString *desc = [NSString stringWithFormat:@"Name: %@[%ld]\nArtist: %@, Genre: %@\nLyrics\n%@", self.name, (long)self.trackNumber, self.artist, self.genre, self.lyrics];
+    NSString *desc = [NSString stringWithFormat:@"Name: %@[%ld-%ld]\nArtist: %@, Genre: %@\nLyrics\n%@", self.name, (long)self.discNumber, (long)self.trackNumber, self.artist, self.genre, self.lyrics];
     return desc;
 }
 

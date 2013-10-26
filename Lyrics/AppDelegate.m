@@ -38,6 +38,11 @@
             continue;
         }
         
+        // 디스크 넘버 확인
+        for (iTunesFileTrack *track in myTracks)
+            if([track discNumber] == 0)
+                [track setDiscNumber:1];
+        
         // 모든 곡이 동일한 앨범에 속해 있는지 확인
         bool isSomeError = true;
         NSString *albumTitle = [[myTracks objectAtIndex:0] album];
@@ -53,15 +58,16 @@
         if(isSomeError == false) continue;
         
         // Sort tracks by track no.
-        NSSortDescriptor *sortDesc = [[NSSortDescriptor alloc] initWithKey:@"trackNumber" ascending:YES];
-        NSArray *sortDescs = [NSArray arrayWithObject:sortDesc];
-        [myTracks sortUsingDescriptors:sortDescs];
+        NSSortDescriptor *discSortDesc = [[NSSortDescriptor alloc] initWithKey:@"discNumber" ascending:YES];
+        NSSortDescriptor *trackSortDesc = [[NSSortDescriptor alloc] initWithKey:@"trackNumber" ascending:YES];
+        [myTracks sortUsingDescriptors:@[discSortDesc, trackSortDesc]];
         
         // 트랙 넘버가 중복되지 않는지 확인
+        NSInteger prevDiscNum = -1;
         NSInteger prevTrackNum = -1;
         for (iTunesFileTrack *track in myTracks)
         {
-            if([track trackNumber] == prevTrackNum)
+            if([track discNumber] == prevDiscNum && [track trackNumber] == prevTrackNum)
             {
                 
                 isSomeError = false;
@@ -69,6 +75,7 @@
                 [self displayErrorMsgOfItunesSelection:errMsg];
                 break;
             }
+            prevDiscNum = [track discNumber];
             prevTrackNum = [track trackNumber];
         }
         if(isSomeError == false) continue;
@@ -127,6 +134,26 @@
     [newRefAlbum.refTracks addObject:refTrack];
 }
 
+- (void)getTrackNumberFrom:(NSString*)trackNumberStr discNumber:(NSInteger*)discNumber trackNumber:(NSInteger*)trackNumber
+{
+    unichar ch0 = [trackNumberStr characterAtIndex:0];
+    unichar ch1 = [trackNumberStr characterAtIndex:1];
+    unichar ch2 = [trackNumberStr characterAtIndex:2];
+    
+    if((ch0 >= '0' && ch0 <= '9') && (ch1 >= '0' && ch1 <= '9') && (ch2 == '.'))
+    {
+        // 1 disc. ex> 01. XXX
+        *discNumber = 1;
+        *trackNumber = [trackNumberStr intValue];
+    }
+    else
+    {
+        // multiple disc. ex> 1 - 01. XXX
+        *discNumber = [trackNumberStr intValue];
+        *trackNumber = [[trackNumberStr substringFromIndex:4] intValue];
+    }
+}
+
 - (RefAlbum*)getRefAlbumFromWeb:(NSString*)refAlbumUrlStr
 {
     NSURL *refAlbumUrl = [[NSURL alloc] initWithString:refAlbumUrlStr];
@@ -164,11 +191,13 @@
     for (NSXMLNode* refTrackNode in refTrackNodes)
     {
         // trackNumber
-        NSInteger trackNumber = [[[refTrackNode nodesForXPath:@"./dl/dt/a/text()" error:&err][0] stringValue] intValue];
+        NSString* trackNumberStr = [[refTrackNode nodesForXPath:@"./dl/dt/a/text()" error:&err][0] stringValue];
+        NSInteger trackNumber, discNumber;
+        [self getTrackNumberFrom:trackNumberStr discNumber:&discNumber trackNumber:&trackNumber];
         BOOL isFound = false;
         for (iTunesFileTrack *track in myTracks)
         {
-            if([track trackNumber] == trackNumber)
+            if([track discNumber] == discNumber && [track trackNumber] == trackNumber)
             {
                 isFound = true;
                 break;

@@ -14,6 +14,7 @@
     NSString* lyrics;
     NSString* artist;
     NSString* genre;
+    NSInteger discNumber;
     NSInteger trackNumber;
 }
 
@@ -21,6 +22,7 @@
 @property NSString* lyrics;
 @property NSString* artist;
 @property NSString* genre;
+@property NSInteger discNumber;
 @property NSInteger trackNumber;
 
 - (id)initWithName:(NSString*)aName;

@@ -27,4 +27,5 @@
 - (void)getMyTracksFromItunes;
 - (RefAlbum*)getRefAlbumFromWeb:(NSString*)refAlbumUrlStr;
 - (void)getRefTrackFromWeb:(RefTrack*)refTrack withUrl:(NSString*)refTrackUrlStr toRefAlbum:(RefAlbum*)refAlbum;
+- (void)getTrackNumberFrom:(NSString*)trackNumberStr discNumber:(NSInteger*)discNumber trackNumber:(NSInteger*)trackNumber;
 @end
