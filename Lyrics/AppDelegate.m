@@ -57,19 +57,19 @@
         NSArray *sortDescs = [NSArray arrayWithObject:sortDesc];
         [myTracks sortUsingDescriptors:sortDescs];
         
-        // 모든 곡이 올바른 트백 번호를 가지고 있는지 확인
-        NSInteger prevTrackNum = 0;
+        // 트랙 넘버가 중복되지 않는지 확인
+        NSInteger prevTrackNum = -1;
         for (iTunesFileTrack *track in myTracks)
         {
-            if([track trackNumber] != prevTrackNum + 1)
+            if([track trackNumber] == prevTrackNum)
             {
                 
                 isSomeError = false;
-                NSString *errMsg = [NSString stringWithFormat:@"'%@'의 트랙 번호가 올바르지 않습니다.", [track name]];
+                NSString *errMsg = [NSString stringWithFormat:@"'%@'의 트랙 번호가 이전 곡과 동일합니다.", [track name]];
                 [self displayErrorMsgOfItunesSelection:errMsg];
                 break;
             }
-            prevTrackNum += 1;
+            prevTrackNum = [track trackNumber];
         }
         if(isSomeError == false) continue;
         
@@ -138,7 +138,6 @@
     // Get ref album's infos
     // Track list
     NSArray *refTrackNodes = [refAlbumPage nodesForXPath:@"//*[@id=\"idTrackList\"]/li" error:&err];
-    assert([myTracks count] == [refTrackNodes count]);
     
     // Title
     NSArray *nodes = [refAlbumPage nodesForXPath:@"//*[@id=\"container\"]/h2/text()" error:&err];
@@ -164,6 +163,19 @@
     // Get ref track's infos
     for (NSXMLNode* refTrackNode in refTrackNodes)
     {
+        // trackNumber
+        NSInteger trackNumber = [[[refTrackNode nodesForXPath:@"./dl/dt/a/text()" error:&err][0] stringValue] intValue];
+        BOOL isFound = false;
+        for (iTunesFileTrack *track in myTracks)
+        {
+            if([track trackNumber] == trackNumber)
+            {
+                isFound = true;
+                break;
+            }
+        }
+        if(isFound == false) continue;
+        
         // Title
         NSString* name = [[refTrackNode nodesForXPath:@"./dl/dt/a/@title" error:&err][0] stringValue];
         RefTrack *refTrack = [[RefTrack alloc] initWithName:name];
@@ -202,6 +214,8 @@
     
     // Get album page
     [self setRefAlbum:[self getRefAlbumFromWeb:refAlbumUrlStr]];
+    
+    assert([self.myTracks count] == [self.refAlbum.refTracks count]);
     
     [self.tableView reloadData];
 }
@@ -291,6 +305,9 @@
         [myTrack setYear:[refAlbum year]];
         [myTrack setAlbum:[refAlbum name]];
     }
+    
+    NSAlert *dialog = [NSAlert alertWithMessageText:@"업데이트가 완료되었습니다." defaultButton:@"확인" alternateButton:nil otherButton:nil informativeTextWithFormat:@""];
+    [dialog runModal];
 }
 
 @end

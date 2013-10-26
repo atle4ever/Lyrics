@@ -14,12 +14,14 @@
     NSString* lyrics;
     NSString* artist;
     NSString* genre;
+    NSInteger trackNumber;
 }
 
 @property NSString* name;
 @property NSString* lyrics;
 @property NSString* artist;
 @property NSString* genre;
+@property NSInteger trackNumber;
 
 - (id)initWithName:(NSString*)aName;
 
