@@ -18,6 +18,7 @@
 @synthesize refAlbum;
 @synthesize myTracks;
 @synthesize willBeUpdated;
+@synthesize refTrackUrlStr;
 
 - (void)displayErrorMsgOfItunesSelection:(NSString*) msg
 {
@@ -84,7 +85,7 @@
     }
 }
 
-- (void)getRefTrackFromWeb:(RefTrack*)refTrack withUrl:(NSString*)refTrackUrlStr toRefAlbum:(RefAlbum*)newRefAlbum
+- (void)getRefTrackFromWeb:(RefTrack*)refTrack toRefAlbum:(RefAlbum*)newRefAlbum
 {
     NSError* err = nil;
     
@@ -212,8 +213,8 @@
         // Get ref track page
         NSString* hrefStr = [[refTrackNode nodesForXPath:@"./dl/dt/a/@href" error:&err][0] stringValue];
         NSString* refTrackId = [[NSNumber numberWithInteger:[[hrefStr substringWithRange:NSMakeRange(35, 9)] integerValue]] stringValue];
-        NSString* refTrackUrlStr = [NSString stringWithFormat:@"http://music.bugs.co.kr/track/%@", refTrackId];
-        [self getRefTrackFromWeb:refTrack withUrl:refTrackUrlStr toRefAlbum:newRefAlbum];
+        [self setRefTrackUrlStr:[NSString stringWithFormat:@"http://music.bugs.co.kr/track/%@", refTrackId]];
+        [self getRefTrackFromWeb:refTrack toRefAlbum:newRefAlbum];
     }
     
     return newRefAlbum;
@@ -333,10 +334,16 @@
         [myTrack setAlbumArtist:[refAlbum artist]];
         [myTrack setYear:[refAlbum year]];
         [myTrack setAlbum:[refAlbum name]];
+        
+        NSString* comment = [NSString stringWithFormat:@"%@\n%@", @"Ver.0.0.1", refTrackUrlStr];
+        [myTrack setComment:comment];
     }
     
     NSAlert *dialog = [NSAlert alertWithMessageText:@"업데이트가 완료되었습니다." defaultButton:@"확인" alternateButton:nil otherButton:nil informativeTextWithFormat:@""];
     [dialog runModal];
 }
+
+// Version info
+// 0.0.1 이름, 아티스트, 앨범 아티스트, 연도, 장르, 앨범 제목, 가사
 
 @end

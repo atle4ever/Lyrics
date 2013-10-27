@@ -15,10 +15,12 @@
     RefAlbum *refAlbum;
     NSMutableArray *myTracks;
     NSMutableArray *willBeUpdated;
+    NSString* refTrackUrlStr;
 }
 
 @property RefAlbum* refAlbum;
 @property NSMutableArray* myTracks;
+@property NSString* refTrackUrlStr;
 @property (copy) IBOutlet NSMutableArray* willBeUpdated;
 @property (assign) IBOutlet NSWindow *window;
 @property (assign) IBOutlet NSTableView *tableView;
@@ -26,6 +28,6 @@
 - (void)displayErrorMsgOfItunesSelection:(NSString*) msg;
 - (void)getMyTracksFromItunes;
 - (RefAlbum*)getRefAlbumFromWeb:(NSString*)refAlbumUrlStr;
-- (void)getRefTrackFromWeb:(RefTrack*)refTrack withUrl:(NSString*)refTrackUrlStr toRefAlbum:(RefAlbum*)refAlbum;
+- (void)getRefTrackFromWeb:(RefTrack*)refTrack toRefAlbum:(RefAlbum*)refAlbum;
 - (void)getTrackNumberFrom:(NSString*)trackNumberStr discNumber:(NSInteger*)discNumber trackNumber:(NSInteger*)trackNumber;
 @end
