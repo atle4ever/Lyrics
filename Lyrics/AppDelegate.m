@@ -7,8 +7,10 @@
 //
 
 #import "AppDelegate.h"
+#import "RefAlbumSelector.h"
 #import "iTunes.h"
 #import "RefAlbum.h"
+#import "RefAlbumCandidate.h"
 #import "RefTrack.h"
 #import "UICheckBox.h"
 #import "UILabel.h"
@@ -220,32 +222,77 @@
     return newRefAlbum;
 }
 
-- (void)applicationDidFinishLaunching:(NSNotification *)aNotification
+- (NSString*)getRefAlbumUrl
 {
-    [self getMyTracksFromItunes];
+    NSString* albumSearchUrlStr = [NSString stringWithFormat:@"http://search.bugs.co.kr/album?q=%@",((iTunesFileTrack*)myTracks[0]).artist];
+    NSURL *albumSearchUrl = [[NSURL alloc] initWithString:[albumSearchUrlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+    NSError *err=nil;
+    NSXMLDocument *albumSearchPage = [[NSXMLDocument alloc] initWithContentsOfURL:albumSearchUrl
+                                                                 options:NSXMLDocumentTidyXML
+                                                                   error:&err];
     
-    NSInteger nSel = [self.myTracks count];
+    // Album list
+    NSArray *albumNodes = [albumSearchPage nodesForXPath:@"//*[@id=\"content\"]/div/ul/li" error:&err];
     
-    // Create array for selected
-    willBeUpdated = [[NSMutableArray alloc] initWithCapacity:nSel];
-    for(int i = 0; i < nSel; ++i)
-        [willBeUpdated addObject:[NSNumber numberWithInt:NSOnState]];
+    NSMutableArray* refAlbumCandidates = [[NSMutableArray alloc] initWithCapacity:[albumNodes count]];
+    for (NSXMLNode* albumNode in albumNodes)
+    {
+        NSString* albumName = [[albumNode nodesForXPath:@"./dl/dt/a/text()" error:&err][0] stringValue];
+        NSString* albumArtist = [[albumNode nodesForXPath:@"./dl/dd/a/@title" error:&err][0] stringValue];
+        NSString* albumUrlStr = [[albumNode nodesForXPath:@"./dl/dt/a/@href" error:&err][0] stringValue];
+        [refAlbumCandidates addObject:[[RefAlbumCandidate alloc] initWithName:albumName artist:albumArtist urlStr:albumUrlStr]];
+    }
+    
+    RefAlbumSelector* refAlbumSelector = [[RefAlbumSelector alloc] initWithWindowNibName:@"RefAlbumSelector"];
+    [refAlbumSelector setRefAlbumCandidates:refAlbumCandidates];
+    [[NSApplication sharedApplication] runModalForWindow:refAlbumSelector.window];
+    
+    if(refAlbumSelector.selected >= 0)
+    {
+        RefAlbumCandidate* candidate = refAlbumCandidates[refAlbumSelector.selected];
+        return candidate.urlStr;
+    }
     
     // Get ref album page's URL from user
-    NSString *refAlbumUrlStr;
     NSAlert *dialog = [NSAlert alertWithMessageText:@"앨범 URL을 입력해주세요." defaultButton:@"확인" alternateButton:@"취소" otherButton:nil informativeTextWithFormat:@"현재 벅스 사이트만 지원합니다."];
     NSTextField *userTextInput = [[NSTextField alloc] initWithFrame:NSMakeRect(0, 0, 300, 24)];
     [dialog setAccessoryView:userTextInput];
     NSInteger clicked = [dialog runModal];
     if (clicked == NSAlertDefaultReturn)
-        refAlbumUrlStr = [userTextInput stringValue];
+        return [userTextInput stringValue];
     else
-        return;
+        return nil;
+}
+
+- (void)applicationDidFinishLaunching:(NSNotification *)aNotification
+{
+    [self getMyTracksFromItunes];
     
-    // Get album page
-    [self setRefAlbum:[self getRefAlbumFromWeb:refAlbumUrlStr]];
+    NSString *refAlbumUrlStr;
+    while(true)
+    {
+        refAlbumUrlStr = [self getRefAlbumUrl];
+        [self.window display];
+        if(refAlbumUrlStr == nil)
+            [[NSApplication sharedApplication] terminate:nil];
+        
+        // Get album page
+        [self setRefAlbum:[self getRefAlbumFromWeb:refAlbumUrlStr]];
+        
+        if([self.myTracks count] == [self.refAlbum.refTracks count])
+            break;
+        else
+        {
+            NSAlert *dialog = [NSAlert alertWithMessageText:@"틀린 앨범입니다. 다시 선택해주세요." defaultButton:@"확인" alternateButton:nil otherButton:nil informativeTextWithFormat:@""];
+            [dialog runModal];
+        }
+    }
     
-    assert([self.myTracks count] == [self.refAlbum.refTracks count]);
+    // Create array for selected
+    NSInteger nSel = [self.myTracks count];
+    willBeUpdated = [[NSMutableArray alloc] initWithCapacity:nSel];
+    for(int i = 0; i < nSel; ++i)
+        [willBeUpdated addObject:[NSNumber numberWithInt:NSOnState]];
     
     [self.tableView reloadData];
 }

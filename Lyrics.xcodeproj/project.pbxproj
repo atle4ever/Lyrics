@@ -11,6 +11,9 @@
 		DF5B305117BBC52D004A58B8 /* ScriptingBridge.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF5B305017BBC52D004A58B8 /* ScriptingBridge.framework */; };
 		DF5B305317BBD2B4004A58B8 /* Documentation.rtf in Resources */ = {isa = PBXBuildFile; fileRef = DF5B305217BBD2B4004A58B8 /* Documentation.rtf */; };
 		DF78DAD617C0F01300B53A5C /* UICheckBox.m in Sources */ = {isa = PBXBuildFile; fileRef = DF78DAD517C0F01300B53A5C /* UICheckBox.m */; };
+		DF8707E0181E82B700944ADC /* RefAlbumCandidate.m in Sources */ = {isa = PBXBuildFile; fileRef = DF8707DF181E82B700944ADC /* RefAlbumCandidate.m */; };
+		DF8707E6181E883F00944ADC /* RefAlbumSelector.m in Sources */ = {isa = PBXBuildFile; fileRef = DF8707E4181E883F00944ADC /* RefAlbumSelector.m */; };
+		DF8707E7181E883F00944ADC /* RefAlbumSelector.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF8707E5181E883F00944ADC /* RefAlbumSelector.xib */; };
 		DFC274F317A3F729003D99EA /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFC274F217A3F729003D99EA /* Cocoa.framework */; };
 		DFC274FD17A3F729003D99EA /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = DFC274FB17A3F729003D99EA /* InfoPlist.strings */; };
 		DFC274FF17A3F729003D99EA /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = DFC274FE17A3F729003D99EA /* main.m */; };
@@ -45,6 +48,11 @@
 		DF5B305217BBD2B4004A58B8 /* Documentation.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = Documentation.rtf; sourceTree = "<group>"; };
 		DF78DAD417C0F01300B53A5C /* UICheckBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UICheckBox.h; sourceTree = "<group>"; };
 		DF78DAD517C0F01300B53A5C /* UICheckBox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UICheckBox.m; sourceTree = "<group>"; };
+		DF8707DE181E82B700944ADC /* RefAlbumCandidate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RefAlbumCandidate.h; sourceTree = "<group>"; };
+		DF8707DF181E82B700944ADC /* RefAlbumCandidate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RefAlbumCandidate.m; sourceTree = "<group>"; };
+		DF8707E3181E883F00944ADC /* RefAlbumSelector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RefAlbumSelector.h; sourceTree = "<group>"; };
+		DF8707E4181E883F00944ADC /* RefAlbumSelector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RefAlbumSelector.m; sourceTree = "<group>"; };
+		DF8707E5181E883F00944ADC /* RefAlbumSelector.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RefAlbumSelector.xib; sourceTree = "<group>"; };
 		DFC274EF17A3F729003D99EA /* Lyrics.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Lyrics.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DFC274F217A3F729003D99EA /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		DFC274F517A3F729003D99EA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -152,6 +160,11 @@
 				DFE1879517AE0CA6002ED7BE /* RefTrack.m */,
 				DFE1879817AE0CBA002ED7BE /* RefAlbum.h */,
 				DFE1879917AE0CBA002ED7BE /* RefAlbum.m */,
+				DF8707DE181E82B700944ADC /* RefAlbumCandidate.h */,
+				DF8707DF181E82B700944ADC /* RefAlbumCandidate.m */,
+				DF8707E3181E883F00944ADC /* RefAlbumSelector.h */,
+				DF8707E4181E883F00944ADC /* RefAlbumSelector.m */,
+				DF8707E5181E883F00944ADC /* RefAlbumSelector.xib */,
 			);
 			path = Lyrics;
 			sourceTree = "<group>";
@@ -260,6 +273,7 @@
 			files = (
 				DFC274FD17A3F729003D99EA /* InfoPlist.strings in Resources */,
 				DFC2750317A3F729003D99EA /* Credits.rtf in Resources */,
+				DF8707E7181E883F00944ADC /* RefAlbumSelector.xib in Resources */,
 				DFC2750917A3F729003D99EA /* MainMenu.xib in Resources */,
 				DF5B305317BBD2B4004A58B8 /* Documentation.rtf in Resources */,
 				DF22D39517BFC5B1008F15A6 /* CustomCell.xib in Resources */,
@@ -300,6 +314,8 @@
 				DFC274FF17A3F729003D99EA /* main.m in Sources */,
 				DFC2750617A3F729003D99EA /* AppDelegate.m in Sources */,
 				DFE1879617AE0CA6002ED7BE /* RefTrack.m in Sources */,
+				DF8707E0181E82B700944ADC /* RefAlbumCandidate.m in Sources */,
+				DF8707E6181E883F00944ADC /* RefAlbumSelector.m in Sources */,
 				DFE1879A17AE0CBA002ED7BE /* RefAlbum.m in Sources */,
 				DF78DAD617C0F01300B53A5C /* UICheckBox.m in Sources */,
 				DFF4A23817C32BB300E4D58C /* UILabel.m in Sources */,
