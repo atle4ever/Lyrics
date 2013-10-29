@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		DF22D39517BFC5B1008F15A6 /* CustomCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF22D39417BFC5B1008F15A6 /* CustomCell.xib */; };
 		DF5B305117BBC52D004A58B8 /* ScriptingBridge.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF5B305017BBC52D004A58B8 /* ScriptingBridge.framework */; };
-		DF5B305317BBD2B4004A58B8 /* Documentation.rtf in Resources */ = {isa = PBXBuildFile; fileRef = DF5B305217BBD2B4004A58B8 /* Documentation.rtf */; };
 		DF78DAD617C0F01300B53A5C /* UICheckBox.m in Sources */ = {isa = PBXBuildFile; fileRef = DF78DAD517C0F01300B53A5C /* UICheckBox.m */; };
 		DF8707E0181E82B700944ADC /* RefAlbumCandidate.m in Sources */ = {isa = PBXBuildFile; fileRef = DF8707DF181E82B700944ADC /* RefAlbumCandidate.m */; };
 		DF8707E6181E883F00944ADC /* RefAlbumSelector.m in Sources */ = {isa = PBXBuildFile; fileRef = DF8707E4181E883F00944ADC /* RefAlbumSelector.m */; };
@@ -45,7 +44,6 @@
 		DF22D39417BFC5B1008F15A6 /* CustomCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CustomCell.xib; sourceTree = "<group>"; };
 		DF5B304F17BBC4F3004A58B8 /* iTunes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iTunes.h; sourceTree = "<group>"; };
 		DF5B305017BBC52D004A58B8 /* ScriptingBridge.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ScriptingBridge.framework; path = System/Library/Frameworks/ScriptingBridge.framework; sourceTree = SDKROOT; };
-		DF5B305217BBD2B4004A58B8 /* Documentation.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = Documentation.rtf; sourceTree = "<group>"; };
 		DF78DAD417C0F01300B53A5C /* UICheckBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UICheckBox.h; sourceTree = "<group>"; };
 		DF78DAD517C0F01300B53A5C /* UICheckBox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UICheckBox.m; sourceTree = "<group>"; };
 		DF8707DE181E82B700944ADC /* RefAlbumCandidate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RefAlbumCandidate.h; sourceTree = "<group>"; };
@@ -105,7 +103,6 @@
 		DFC274E617A3F728003D99EA = {
 			isa = PBXGroup;
 			children = (
-				DF5B305217BBD2B4004A58B8 /* Documentation.rtf */,
 				DF5B305017BBC52D004A58B8 /* ScriptingBridge.framework */,
 				DFC274F817A3F729003D99EA /* Lyrics */,
 				DFC2751517A3F72A003D99EA /* LyricsTests */,
@@ -275,7 +272,6 @@
 				DFC2750317A3F729003D99EA /* Credits.rtf in Resources */,
 				DF8707E7181E883F00944ADC /* RefAlbumSelector.xib in Resources */,
 				DFC2750917A3F729003D99EA /* MainMenu.xib in Resources */,
-				DF5B305317BBD2B4004A58B8 /* Documentation.rtf in Resources */,
 				DF22D39517BFC5B1008F15A6 /* CustomCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
