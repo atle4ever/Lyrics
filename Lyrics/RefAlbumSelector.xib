@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="4511" systemVersion="13A603" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <deployment defaultVersion="1080" identifier="macosx"/>
+        <deployment defaultVersion="1090" identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="4511"/>
     </dependencies>
     <objects>
@@ -15,27 +15,27 @@
         <window title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" wantsToBeColor="NO" animationBehavior="default" id="1">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="196" y="240" width="480" height="502"/>
+            <rect key="contentRect" x="196" y="240" width="480" height="500"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1440" height="878"/>
             <view key="contentView" id="2">
-                <rect key="frame" x="0.0" y="0.0" width="480" height="502"/>
+                <rect key="frame" x="0.0" y="0.0" width="480" height="500"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <scrollView fixedFrame="YES" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="n4n-Mm-IkS">
-                        <rect key="frame" x="-1" y="54" width="482" height="449"/>
+                    <scrollView autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="n4n-Mm-IkS">
+                        <rect key="frame" x="0.0" y="54" width="480" height="446"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <clipView key="contentView" ambiguous="YES" misplaced="YES" id="jjF-jh-Qdh">
-                            <rect key="frame" x="1" y="1" width="480" height="447"/>
+                        <clipView key="contentView" id="jjF-jh-Qdh">
+                            <rect key="frame" x="1" y="1" width="478" height="444"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnReordering="NO" columnSelection="YES" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" id="iLr-jj-ikn">
-                                    <rect key="frame" x="0.0" y="0.0" width="480" height="447"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="478" height="447"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <size key="intercellSpacing" width="3" height="2"/>
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                     <tableColumns>
-                                        <tableColumn width="477" minWidth="40" maxWidth="1000" id="KVi-8I-xe6">
+                                        <tableColumn width="475" minWidth="40" maxWidth="1000" id="KVi-8I-xe6">
                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left">
                                                 <font key="font" metaFont="smallSystem"/>
                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -62,13 +62,17 @@
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
                         <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" id="5lw-Rh-jpT">
-                            <rect key="frame" x="-15" y="1" width="16" height="0.0"/>
+                            <rect key="frame" x="462" y="1" width="16" height="0.0"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
                     </scrollView>
-                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9H2-ec-6Kj">
-                        <rect key="frame" x="199" y="13" width="90" height="32"/>
+                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="9H2-ec-6Kj">
+                        <rect key="frame" x="195" y="13" width="90" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="78" id="8bD-yS-bS8"/>
+                            <constraint firstAttribute="height" constant="21" id="rAX-iU-sK7"/>
+                        </constraints>
                         <buttonCell key="cell" type="push" title="직접 입력" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Djt-yg-5i9">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" size="13" name="AppleSDGothicNeo-Regular"/>
@@ -78,6 +82,15 @@
                         </connections>
                     </button>
                 </subviews>
+                <constraints>
+                    <constraint firstAttribute="centerX" secondItem="9H2-ec-6Kj" secondAttribute="centerX" id="Ggc-WN-JEJ"/>
+                    <constraint firstItem="9H2-ec-6Kj" firstAttribute="top" secondItem="n4n-Mm-IkS" secondAttribute="bottom" constant="13" id="KBo-8m-eAt"/>
+                    <constraint firstAttribute="centerX" secondItem="n4n-Mm-IkS" secondAttribute="centerX" id="OcC-HP-mZg"/>
+                    <constraint firstItem="n4n-Mm-IkS" firstAttribute="leading" secondItem="2" secondAttribute="leading" id="QYV-XF-5RJ"/>
+                    <constraint firstAttribute="bottom" secondItem="9H2-ec-6Kj" secondAttribute="bottom" constant="20" id="VL5-tS-KTo"/>
+                    <constraint firstItem="n4n-Mm-IkS" firstAttribute="top" secondItem="2" secondAttribute="top" id="i9u-nS-KI1"/>
+                    <constraint firstAttribute="trailing" secondItem="n4n-Mm-IkS" secondAttribute="trailing" id="j9j-gh-Alb"/>
+                </constraints>
             </view>
             <connections>
                 <outlet property="delegate" destination="-2" id="4"/>

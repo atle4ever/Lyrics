@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="4511" systemVersion="13A603" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <deployment defaultVersion="1080" identifier="macosx"/>
+        <deployment defaultVersion="1090" identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="4511"/>
     </dependencies>
     <objects>
@@ -650,21 +650,21 @@
         <window title="Lyrics" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" animationBehavior="default" id="371">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="335" y="390" width="1049" height="518"/>
+            <rect key="contentRect" x="203" y="178" width="1000" height="520"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1440" height="878"/>
             <view key="contentView" id="372">
-                <rect key="frame" x="0.0" y="0.0" width="1049" height="518"/>
+                <rect key="frame" x="0.0" y="0.0" width="1000" height="520"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <scrollView wantsLayer="YES" misplaced="YES" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="573">
-                        <rect key="frame" x="-1" y="62" width="1051" height="458"/>
+                    <scrollView wantsLayer="YES" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="573">
+                        <rect key="frame" x="0.0" y="54" width="1000" height="466"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <clipView key="contentView" id="0Gn-LZ-gUY">
-                            <rect key="frame" x="1" y="1" width="1049" height="456"/>
+                            <rect key="frame" x="1" y="1" width="998" height="464"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="none" columnResizing="NO" multipleSelection="NO" emptySelection="NO" autosaveColumns="NO" typeSelect="NO" id="574">
-                                    <rect key="frame" x="0.0" y="0.0" width="1049" height="456"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="1003" height="464"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <size key="intercellSpacing" width="3" height="2"/>
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -692,8 +692,8 @@
                             </subviews>
                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </clipView>
-                        <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" id="575">
-                            <rect key="frame" x="1" y="117" width="235" height="16"/>
+                        <scroller key="horizontalScroller" verticalHuggingPriority="750" id="575">
+                            <rect key="frame" x="1" y="449" width="998" height="16"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
                         <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" id="577">
@@ -702,8 +702,12 @@
                         </scroller>
                     </scrollView>
                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="590">
-                        <rect key="frame" x="482" y="13" width="85" height="32"/>
+                        <rect key="frame" x="457" y="13" width="86" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="74" id="MAa-mo-dzn"/>
+                            <constraint firstAttribute="height" constant="21" id="hee-XT-vgN"/>
+                        </constraints>
                         <buttonCell key="cell" type="push" title="업데이트" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="591">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
@@ -714,12 +718,13 @@
                     </button>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="573" firstAttribute="top" secondItem="372" secondAttribute="top" constant="-1" id="586"/>
-                    <constraint firstItem="573" firstAttribute="leading" secondItem="372" secondAttribute="leading" constant="-1" id="587"/>
-                    <constraint firstAttribute="trailing" secondItem="573" secondAttribute="trailing" constant="-1" id="588"/>
-                    <constraint firstAttribute="bottom" secondItem="590" secondAttribute="bottom" constant="20" symbolic="YES" id="593"/>
-                    <constraint firstItem="590" firstAttribute="centerX" secondItem="573" secondAttribute="centerX" id="594"/>
-                    <constraint firstItem="590" firstAttribute="top" secondItem="573" secondAttribute="bottom" constant="20" symbolic="YES" id="595"/>
+                    <constraint firstItem="573" firstAttribute="leading" secondItem="372" secondAttribute="leading" id="20G-b5-e53"/>
+                    <constraint firstAttribute="centerX" secondItem="590" secondAttribute="centerX" id="Myk-1m-FfT"/>
+                    <constraint firstAttribute="bottom" secondItem="590" secondAttribute="bottom" constant="20" id="Swb-9n-PTi"/>
+                    <constraint firstAttribute="trailing" secondItem="573" secondAttribute="trailing" id="Yxs-ZH-dRW"/>
+                    <constraint firstAttribute="centerX" secondItem="573" secondAttribute="centerX" id="dR8-MX-4yF"/>
+                    <constraint firstItem="573" firstAttribute="top" secondItem="372" secondAttribute="top" id="q9f-Gt-Vvn"/>
+                    <constraint firstItem="590" firstAttribute="top" secondItem="573" secondAttribute="bottom" constant="13" id="t3g-Nk-DPl"/>
                 </constraints>
             </view>
         </window>
