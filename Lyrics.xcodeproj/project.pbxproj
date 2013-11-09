@@ -13,6 +13,7 @@
 		DF8707E0181E82B700944ADC /* RefAlbumCandidate.m in Sources */ = {isa = PBXBuildFile; fileRef = DF8707DF181E82B700944ADC /* RefAlbumCandidate.m */; };
 		DF8707E6181E883F00944ADC /* RefAlbumSelector.m in Sources */ = {isa = PBXBuildFile; fileRef = DF8707E4181E883F00944ADC /* RefAlbumSelector.m */; };
 		DF8707E7181E883F00944ADC /* RefAlbumSelector.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF8707E5181E883F00944ADC /* RefAlbumSelector.xib */; };
+		DF93B7DE182E129C00D296F2 /* NSString+HTML.m in Sources */ = {isa = PBXBuildFile; fileRef = DF93B7DD182E129C00D296F2 /* NSString+HTML.m */; };
 		DFC274F317A3F729003D99EA /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFC274F217A3F729003D99EA /* Cocoa.framework */; };
 		DFC274FD17A3F729003D99EA /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = DFC274FB17A3F729003D99EA /* InfoPlist.strings */; };
 		DFC274FF17A3F729003D99EA /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = DFC274FE17A3F729003D99EA /* main.m */; };
@@ -51,6 +52,8 @@
 		DF8707E3181E883F00944ADC /* RefAlbumSelector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RefAlbumSelector.h; sourceTree = "<group>"; };
 		DF8707E4181E883F00944ADC /* RefAlbumSelector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RefAlbumSelector.m; sourceTree = "<group>"; };
 		DF8707E5181E883F00944ADC /* RefAlbumSelector.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RefAlbumSelector.xib; sourceTree = "<group>"; };
+		DF93B7DC182E129C00D296F2 /* NSString+HTML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+HTML.h"; path = "../NSString+HTML.h"; sourceTree = "<group>"; };
+		DF93B7DD182E129C00D296F2 /* NSString+HTML.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+HTML.m"; path = "../NSString+HTML.m"; sourceTree = "<group>"; };
 		DFC274EF17A3F729003D99EA /* Lyrics.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Lyrics.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DFC274F217A3F729003D99EA /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		DFC274F517A3F729003D99EA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -143,6 +146,8 @@
 		DFC274F817A3F729003D99EA /* Lyrics */ = {
 			isa = PBXGroup;
 			children = (
+				DF93B7DC182E129C00D296F2 /* NSString+HTML.h */,
+				DF93B7DD182E129C00D296F2 /* NSString+HTML.m */,
 				DF5B304F17BBC4F3004A58B8 /* iTunes.h */,
 				DFC2750417A3F729003D99EA /* AppDelegate.h */,
 				DFC2750517A3F729003D99EA /* AppDelegate.m */,
@@ -311,6 +316,7 @@
 				DFC2750617A3F729003D99EA /* AppDelegate.m in Sources */,
 				DFE1879617AE0CA6002ED7BE /* RefTrack.m in Sources */,
 				DF8707E0181E82B700944ADC /* RefAlbumCandidate.m in Sources */,
+				DF93B7DE182E129C00D296F2 /* NSString+HTML.m in Sources */,
 				DF8707E6181E883F00944ADC /* RefAlbumSelector.m in Sources */,
 				DFE1879A17AE0CBA002ED7BE /* RefAlbum.m in Sources */,
 				DF78DAD617C0F01300B53A5C /* UICheckBox.m in Sources */,
@@ -400,7 +406,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
 			};
@@ -426,7 +432,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				SDKROOT = macosx;
 			};
 			name = Release;

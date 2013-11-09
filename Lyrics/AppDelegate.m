@@ -14,6 +14,7 @@
 #import "RefTrack.h"
 #import "UICheckBox.h"
 #import "UILabel.h"
+#import "NSString+HTML.h"
 
 @implementation AppDelegate
 
@@ -112,7 +113,7 @@
             if([str compare:@"<br></br>"] == 0)
                 [lyrics appendString:@"\n"];
             else
-                [lyrics appendString:str];
+                [lyrics appendString:[str kv_decodeHTMLCharacterEntities]];
         }
         NSString *trimedLyrics = [lyrics stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
         [refTrack setLyrics:trimedLyrics];
@@ -125,14 +126,14 @@
     if([nodes count] != 1) // when artist isn't linked
         nodes = [refTrackPage nodesForXPath:@"//*[@id=\"content\"]/div[1]/div[2]/div[2]/div/dl/dd[1]/strong/text()" error:&err];
     assert([nodes count] == 1);
-    [refTrack setArtist:[nodes[0] description]];
+    [refTrack setArtist:[[nodes[0] description] kv_decodeHTMLCharacterEntities]];
     
     // Genre
     nodes = [refTrackPage nodesForXPath:@"//*[@id=\"content\"]/div[1]/div[2]/div[2]/div/dl/dd[3]/text()" error:&err];
     if([nodes count] == 0)
         [refTrack setGenre:@""];
     else
-        [refTrack setGenre:[nodes[0] description]];
+        [refTrack setGenre:[[nodes[0] description] kv_decodeHTMLCharacterEntities]];
     
     [newRefAlbum.refTracks addObject:refTrack];
 }
@@ -172,14 +173,14 @@
     // Title
     NSArray *nodes = [refAlbumPage nodesForXPath:@"//*[@id=\"container\"]/h2/text()" error:&err];
     assert([nodes count] == 1);
-    NSString *refAlbumName = [nodes[0] description];
+    NSString *refAlbumName = [[nodes[0] description] kv_decodeHTMLCharacterEntities];
     
     // Artist
     nodes = [refAlbumPage nodesForXPath:@"//*[@id=\"content\"]/div[1]/div[2]/div[2]/dl/dd[1]/strong/a/text()" error:&err];
     if([nodes count] != 1)  // when artist isn't linked
         nodes = [refAlbumPage nodesForXPath:@"//*[@id=\"content\"]/div[1]/div[2]/div[2]/dl/dd[1]/strong/text()" error:&err];
     assert([nodes count] == 1);
-    NSString *refAlbumArtist = [nodes[0] description];
+    NSString *refAlbumArtist = [[nodes[0] description] kv_decodeHTMLCharacterEntities];
     
     // Date
     nodes = [refAlbumPage nodesForXPath:@"//*[@id=\"content\"]/div[1]/div[2]/div[2]/dl/dd[5]/text()" error:&err];
@@ -209,7 +210,7 @@
         if(isFound == false) continue;
         
         // Title
-        NSString* name = [[refTrackNode nodesForXPath:@"./dl/dt/a/@title" error:&err][0] stringValue];
+        NSString* name = [[[refTrackNode nodesForXPath:@"./dl/dt/a/@title" error:&err][0] stringValue] kv_decodeHTMLCharacterEntities];
         RefTrack *refTrack = [[RefTrack alloc] initWithName:name];
         
         // Get ref track page
@@ -237,9 +238,9 @@
     NSMutableArray* refAlbumCandidates = [[NSMutableArray alloc] initWithCapacity:[albumNodes count]];
     for (NSXMLNode* albumNode in albumNodes)
     {
-        NSString* albumName = [[albumNode nodesForXPath:@"./dl/dt/a/text()" error:&err][0] stringValue];
-        NSString* albumArtist = [[albumNode nodesForXPath:@"./dl/dd/a/@title" error:&err][0] stringValue];
-        NSString* albumUrlStr = [[albumNode nodesForXPath:@"./dl/dt/a/@href" error:&err][0] stringValue];
+        NSString* albumName = [[[albumNode nodesForXPath:@"./dl/dt/a/text()" error:&err][0] stringValue] kv_decodeHTMLCharacterEntities];
+        NSString* albumArtist = [[[albumNode nodesForXPath:@"./dl/dd/a/@title" error:&err][0] stringValue] kv_decodeHTMLCharacterEntities];
+        NSString* albumUrlStr = [[[albumNode nodesForXPath:@"./dl/dt/a/@href" error:&err][0] stringValue] kv_decodeHTMLCharacterEntities];
         [refAlbumCandidates addObject:[[RefAlbumCandidate alloc] initWithName:albumName artist:albumArtist urlStr:albumUrlStr]];
     }
     
@@ -382,7 +383,7 @@
         [myTrack setYear:[refAlbum year]];
         [myTrack setAlbum:[refAlbum name]];
         
-        NSString* comment = [NSString stringWithFormat:@"%@\n%@", @"Ver.0.0.1", refTrackUrlStr];
+        NSString* comment = [NSString stringWithFormat:@"%@\n%@", @"Ver.0.0.2", refTrackUrlStr];
         [myTrack setComment:comment];
     }
     
@@ -392,5 +393,6 @@
 
 // Version info
 // 0.0.1 이름, 아티스트, 앨범 아티스트, 연도, 장르, 앨범 제목, 가사
+// 0.0.2 decoding html character ex. &amp;
 
 @end
