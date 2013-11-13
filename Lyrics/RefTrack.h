@@ -16,6 +16,7 @@
     NSString* genre;
     NSInteger discNumber;
     NSInteger trackNumber;
+    NSString* urlStr;
 }
 
 @property NSString* name;
@@ -24,6 +25,7 @@
 @property NSString* genre;
 @property NSInteger discNumber;
 @property NSInteger trackNumber;
+@property NSString* urlStr;
 
 - (id)initWithName:(NSString*)aName;
 

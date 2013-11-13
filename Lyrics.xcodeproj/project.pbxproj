@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		DF0B33AA182E8721004603F8 /* MyAlbum.m in Sources */ = {isa = PBXBuildFile; fileRef = DF0B33A9182E8721004603F8 /* MyAlbum.m */; };
 		DF5B305117BBC52D004A58B8 /* ScriptingBridge.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF5B305017BBC52D004A58B8 /* ScriptingBridge.framework */; };
-		DF8707E0181E82B700944ADC /* RefAlbumCandidate.m in Sources */ = {isa = PBXBuildFile; fileRef = DF8707DF181E82B700944ADC /* RefAlbumCandidate.m */; };
 		DF93B7DE182E129C00D296F2 /* NSString+HTML.m in Sources */ = {isa = PBXBuildFile; fileRef = DF93B7DD182E129C00D296F2 /* NSString+HTML.m */; };
 		DFC148E918313CDC00F10A1A /* RefAlbumCandidatesCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = DFC148E818313CDC00F10A1A /* RefAlbumCandidatesCellView.m */; };
 		DFC148EC183143DB00F10A1A /* TracksCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = DFC148EB183143DB00F10A1A /* TracksCellView.m */; };
@@ -45,8 +44,6 @@
 		DF0B33A9182E8721004603F8 /* MyAlbum.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyAlbum.m; sourceTree = "<group>"; };
 		DF5B304F17BBC4F3004A58B8 /* iTunes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iTunes.h; sourceTree = "<group>"; };
 		DF5B305017BBC52D004A58B8 /* ScriptingBridge.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ScriptingBridge.framework; path = System/Library/Frameworks/ScriptingBridge.framework; sourceTree = SDKROOT; };
-		DF8707DE181E82B700944ADC /* RefAlbumCandidate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RefAlbumCandidate.h; sourceTree = "<group>"; };
-		DF8707DF181E82B700944ADC /* RefAlbumCandidate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RefAlbumCandidate.m; sourceTree = "<group>"; };
 		DF93B7DC182E129C00D296F2 /* NSString+HTML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+HTML.h"; path = "../NSString+HTML.h"; sourceTree = "<group>"; };
 		DF93B7DD182E129C00D296F2 /* NSString+HTML.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+HTML.m"; path = "../NSString+HTML.m"; sourceTree = "<group>"; };
 		DFC148E718313CDC00F10A1A /* RefAlbumCandidatesCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RefAlbumCandidatesCellView.h; sourceTree = "<group>"; };
@@ -125,10 +122,17 @@
 				DFE1879517AE0CA6002ED7BE /* RefTrack.m */,
 				DFE1879817AE0CBA002ED7BE /* RefAlbum.h */,
 				DFE1879917AE0CBA002ED7BE /* RefAlbum.m */,
-				DF8707DE181E82B700944ADC /* RefAlbumCandidate.h */,
-				DF8707DF181E82B700944ADC /* RefAlbumCandidate.m */,
 			);
 			name = "Data structure";
+			sourceTree = "<group>";
+		};
+		DF3A0F2F18337C6700A093FD /* Util */ = {
+			isa = PBXGroup;
+			children = (
+				DF93B7DC182E129C00D296F2 /* NSString+HTML.h */,
+				DF93B7DD182E129C00D296F2 /* NSString+HTML.m */,
+			);
+			name = Util;
 			sourceTree = "<group>";
 		};
 		DFC274E617A3F728003D99EA = {
@@ -174,13 +178,12 @@
 		DFC274F817A3F729003D99EA /* Lyrics */ = {
 			isa = PBXGroup;
 			children = (
-				DF93B7DC182E129C00D296F2 /* NSString+HTML.h */,
-				DF93B7DD182E129C00D296F2 /* NSString+HTML.m */,
 				DF5B304F17BBC4F3004A58B8 /* iTunes.h */,
 				DFC2750417A3F729003D99EA /* AppDelegate.h */,
 				DFC2750517A3F729003D99EA /* AppDelegate.m */,
 				DF3A0F2E1833726E00A093FD /* Data structure */,
 				DF0B33A7182E8699004603F8 /* UI */,
+				DF3A0F2F18337C6700A093FD /* Util */,
 				DFC274F917A3F729003D99EA /* Supporting Files */,
 			);
 			path = Lyrics;
@@ -329,7 +332,6 @@
 				DF0B33AA182E8721004603F8 /* MyAlbum.m in Sources */,
 				DFC2750617A3F729003D99EA /* AppDelegate.m in Sources */,
 				DFE1879617AE0CA6002ED7BE /* RefTrack.m in Sources */,
-				DF8707E0181E82B700944ADC /* RefAlbumCandidate.m in Sources */,
 				DF93B7DE182E129C00D296F2 /* NSString+HTML.m in Sources */,
 				DFE1879A17AE0CBA002ED7BE /* RefAlbum.m in Sources */,
 				DFC148EC183143DB00F10A1A /* TracksCellView.m in Sources */,

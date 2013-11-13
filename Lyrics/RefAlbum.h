@@ -14,13 +14,15 @@
     NSMutableArray* refTracks;
     NSString* artist;
     NSInteger year;
+    NSString* urlStr;
 }
 
 @property NSString* name;
 @property NSMutableArray* refTracks;
 @property NSString* artist;
 @property NSInteger year;
+@property NSString* urlStr;
 
-- (id)initWithName:(NSString*)aName numOfMusic:(NSUInteger)num;
+- (id)initWithName:(NSString*)aName artist:(NSString*)aArtist year:(NSInteger)aYear urlStr:(NSString*)aUrlStr;
 
 @end

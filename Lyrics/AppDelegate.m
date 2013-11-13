@@ -8,22 +8,26 @@
 
 #import "AppDelegate.h"
 #import "iTunes.h"
+
+// Data structure
 #import "MyAlbum.h"
 #import "RefAlbum.h"
+#import "RefTrack.h"
+
+// UI
 #import "TracksCellView.h"
 #import "MyAlbumCellView.h"
 #import "RefAlbumCandidatesCellView.h"
-#import "RefAlbumCandidate.h"
-#import "RefTrack.h"
+
+// Util
 #import "NSString+HTML.h"
 
 @implementation AppDelegate
 
-@synthesize refAlbum;
-@synthesize myTracks;
 @synthesize myAlbums;
-@synthesize refAlbumCandidates;
-@synthesize refTrackUrlStr;
+@synthesize selectedMyAlbum;
+@synthesize refAlbums;
+@synthesize selectedRefAlbum;
 
 - (void)displayErrorMsgOfItunesSelection:(NSString*) msg
 {
@@ -75,30 +79,6 @@
     NSSortDescriptor *dateAddedSortDesc = [[NSSortDescriptor alloc] initWithKey:@"dateAdded" ascending:NO];
     [myAlbums sortUsingDescriptors:@[dateAddedSortDesc]];
     
-/* TODO: 새로운 코드에 아래 사항을 추가할 것
-        // Sort tracks by track no.
-        NSSortDescriptor *discSortDesc = [[NSSortDescriptor alloc] initWithKey:@"discNumber" ascending:YES];
-        NSSortDescriptor *trackSortDesc = [[NSSortDescriptor alloc] initWithKey:@"trackNumber" ascending:YES];
-        [myTracks sortUsingDescriptors:@[discSortDesc, trackSortDesc]];
-        
-        // 트랙 넘버가 중복되지 않는지 확인
-        NSInteger prevDiscNum = -1;
-        NSInteger prevTrackNum = -1;
-        for (iTunesFileTrack *track in myTracks)
-        {
-            if([track discNumber] == prevDiscNum && [track trackNumber] == prevTrackNum)
-            {
-                
-                isSomeError = false;
-                NSString *errMsg = [NSString stringWithFormat:@"'%@'의 트랙 번호가 이전 곡과 동일합니다.", [track name]];
-                [self displayErrorMsgOfItunesSelection:errMsg];
-                break;
-            }
-            prevDiscNum = [track discNumber];
-            prevTrackNum = [track trackNumber];
-        }
-        if(isSomeError == false) continue;
- */
     
     [self.myAlbumTableView reloadData];
 }
@@ -115,13 +95,15 @@
     // Album list
     NSArray *albumNodes = [albumSearchPage nodesForXPath:@"//*[@id=\"content\"]/div/ul/li" error:&err];
     
-    refAlbumCandidates = [[NSMutableArray alloc] initWithCapacity:[albumNodes count]];
+    refAlbums = [[NSMutableArray alloc] initWithCapacity:[albumNodes count]];
     for (NSXMLNode* albumNode in albumNodes)
     {
         NSString* albumName = [[[albumNode nodesForXPath:@"./dl/dt/a/text()" error:&err][0] stringValue] kv_decodeHTMLCharacterEntities];
         NSString* albumArtist = [[[albumNode nodesForXPath:@"./dl/dd/a/@title" error:&err][0] stringValue] kv_decodeHTMLCharacterEntities];
         NSString* albumUrlStr = [[[albumNode nodesForXPath:@"./dl/dt/a/@href" error:&err][0] stringValue] kv_decodeHTMLCharacterEntities];
-        [refAlbumCandidates addObject:[[RefAlbumCandidate alloc] initWithName:albumName artist:albumArtist urlStr:albumUrlStr]];
+        NSString* albumYearStr = [[[albumNode nodesForXPath:@"./dl/dt/a/@href" error:&err][0] stringValue] kv_decodeHTMLCharacterEntities];
+        NSInteger albumYear = [[albumYearStr substringToIndex:4] integerValue];
+        [refAlbums addObject:[[RefAlbum alloc] initWithName:albumName artist:albumArtist year:albumYear urlStr:albumUrlStr]];
     }
     
     [self.refAlbumCandidatesTableView reloadData];
@@ -140,72 +122,7 @@
      */
 }
 
-- (void)reloadTracksTable:(NSString*)refAlbumUrlStr
-{
-    NSURL *refAlbumUrl = [[NSURL alloc] initWithString:refAlbumUrlStr];
-    NSError *err=nil;
-    NSXMLDocument *refAlbumPage = [[NSXMLDocument alloc] initWithContentsOfURL:refAlbumUrl
-                                                                 options:NSXMLDocumentTidyXML
-                                                                   error:&err];
-    
-    // Get ref album's infos
-    // Track list
-    NSArray *refTrackNodes = [refAlbumPage nodesForXPath:@"//*[@id=\"idTrackList\"]/li" error:&err];
-    
-    // Title
-    NSArray *nodes = [refAlbumPage nodesForXPath:@"//*[@id=\"container\"]/h2/text()" error:&err];
-    assert([nodes count] == 1);
-    NSString *refAlbumName = [[nodes[0] description] kv_decodeHTMLCharacterEntities];
-    
-    // Artist
-    nodes = [refAlbumPage nodesForXPath:@"//*[@id=\"content\"]/div[1]/div[2]/div[2]/dl/dd[1]/strong/a/text()" error:&err];
-    if([nodes count] != 1)  // when artist isn't linked
-        nodes = [refAlbumPage nodesForXPath:@"//*[@id=\"content\"]/div[1]/div[2]/div[2]/dl/dd[1]/strong/text()" error:&err];
-    assert([nodes count] == 1);
-    NSString *refAlbumArtist = [[nodes[0] description] kv_decodeHTMLCharacterEntities];
-    
-    // Date
-    nodes = [refAlbumPage nodesForXPath:@"//*[@id=\"content\"]/div[1]/div[2]/div[2]/dl/dd[5]/text()" error:&err];
-    assert([nodes count] == 1);
-    NSInteger refAlbumDate = [[[nodes[0] description] substringToIndex:4] integerValue];
-    
-    refAlbum = [[RefAlbum alloc] initWithName:refAlbumName numOfMusic:[nodes count]];
-    [refAlbum setArtist:refAlbumArtist];
-    [refAlbum setYear:refAlbumDate];
-    
-    // Get ref track's infos
-    for (NSXMLNode* refTrackNode in refTrackNodes)
-    {
-        // trackNumber
-        NSString* trackNumberStr = [[refTrackNode nodesForXPath:@"./dl/dt/a/text()" error:&err][0] stringValue];
-        NSInteger trackNumber, discNumber;
-        [self getTrackNumberFrom:trackNumberStr discNumber:&discNumber trackNumber:&trackNumber];
-        BOOL isFound = false;
-        for (iTunesFileTrack *track in myTracks)
-        {
-            if([track discNumber] == discNumber && [track trackNumber] == trackNumber)
-            {
-                isFound = true;
-                break;
-            }
-        }
-        if(isFound == false) continue;
-        
-        // Title
-        NSString* name = [[[refTrackNode nodesForXPath:@"./dl/dt/a/@title" error:&err][0] stringValue] kv_decodeHTMLCharacterEntities];
-        RefTrack *refTrack = [[RefTrack alloc] initWithName:name];
-        
-        // Get ref track page
-        NSString* hrefStr = [[refTrackNode nodesForXPath:@"./dl/dt/a/@href" error:&err][0] stringValue];
-        NSString* refTrackId = [[NSNumber numberWithInteger:[[hrefStr substringWithRange:NSMakeRange(35, 9)] integerValue]] stringValue];
-        [self setRefTrackUrlStr:[NSString stringWithFormat:@"http://music.bugs.co.kr/track/%@", refTrackId]];
-        [self getRefTrackFromWeb:refTrack toRefAlbum:refAlbum];
-    }
-    
-    [self.tracksTableView reloadData];
-}
-
-- (void)getRefTrackFromWeb:(RefTrack*)refTrack toRefAlbum:(RefAlbum*)newRefAlbum
+- (void)getRefTrackFromWeb:(RefTrack*)refTrack toRefAlbum:(RefAlbum*)newRefAlbum fromRefTrackUrl:(NSString*)refTrackUrlStr
 {
     NSError* err = nil;
     
@@ -255,6 +172,71 @@
     [newRefAlbum.refTracks addObject:refTrack];
 }
 
+- (void)reloadTracksTable
+{
+    NSString* refAlbumUrlStr = selectedRefAlbum.urlStr;
+    NSURL *refAlbumUrl = [NSURL URLWithString:refAlbumUrlStr];
+    NSError *err=nil;
+    NSXMLDocument *refAlbumPage = [[NSXMLDocument alloc] initWithContentsOfURL:refAlbumUrl
+                                                                 options:NSXMLDocumentTidyXML
+                                                                   error:&err];
+    
+    // Get ref album's infos
+    // Track list
+    NSArray *refTrackNodes = [refAlbumPage nodesForXPath:@"//*[@id=\"idTrackList\"]/li" error:&err];
+    
+    // Title
+    NSArray *nodes = [refAlbumPage nodesForXPath:@"//*[@id=\"container\"]/h2/text()" error:&err];
+    assert([nodes count] == 1);
+    NSString *refAlbumName = [[nodes[0] description] kv_decodeHTMLCharacterEntities];
+    selectedRefAlbum.name = refAlbumName;
+    
+    // Artist
+    nodes = [refAlbumPage nodesForXPath:@"//*[@id=\"content\"]/div[1]/div[2]/div[2]/dl/dd[1]/strong/a/text()" error:&err];
+    if([nodes count] != 1)  // when artist isn't linked
+        nodes = [refAlbumPage nodesForXPath:@"//*[@id=\"content\"]/div[1]/div[2]/div[2]/dl/dd[1]/strong/text()" error:&err];
+    assert([nodes count] == 1);
+    NSString *refAlbumArtist = [[nodes[0] description] kv_decodeHTMLCharacterEntities];
+    selectedRefAlbum.artist = refAlbumArtist;
+    
+    // Date
+    nodes = [refAlbumPage nodesForXPath:@"//*[@id=\"content\"]/div[1]/div[2]/div[2]/dl/dd[5]/text()" error:&err];
+    assert([nodes count] == 1);
+    NSInteger refAlbumDate = [[[nodes[0] description] substringToIndex:4] integerValue];
+    selectedRefAlbum.year = refAlbumDate;
+    
+    // Get ref track's infos
+    for (NSXMLNode* refTrackNode in refTrackNodes)
+    {
+        // trackNumber
+        NSString* trackNumberStr = [[refTrackNode nodesForXPath:@"./dl/dt/a/text()" error:&err][0] stringValue];
+        NSInteger trackNumber, discNumber;
+        [self getTrackNumberFrom:trackNumberStr discNumber:&discNumber trackNumber:&trackNumber];
+        BOOL isFound = false;
+        for (iTunesFileTrack *track in selectedMyAlbum.tracks)
+        {
+            if([track discNumber] == discNumber && [track trackNumber] == trackNumber)
+            {
+                isFound = true;
+                break;
+            }
+        }
+        if(isFound == false) continue;
+        
+        // Title
+        NSString* name = [[[refTrackNode nodesForXPath:@"./dl/dt/a/@title" error:&err][0] stringValue] kv_decodeHTMLCharacterEntities];
+        RefTrack *refTrack = [[RefTrack alloc] initWithName:name];
+        
+        // Get ref track page
+        NSString* hrefStr = [[refTrackNode nodesForXPath:@"./dl/dt/a/@href" error:&err][0] stringValue];
+        NSString* refTrackId = [[NSNumber numberWithInteger:[[hrefStr substringWithRange:NSMakeRange(35, 9)] integerValue]] stringValue];
+        NSString* refTrackUrlStr = [NSString stringWithFormat:@"http://music.bugs.co.kr/track/%@", refTrackId];
+        [self getRefTrackFromWeb:refTrack toRefAlbum:selectedRefAlbum fromRefTrackUrl:refTrackUrlStr];
+    }
+    
+    [self.tracksTableView reloadData];
+}
+
 - (void)getTrackNumberFrom:(NSString*)trackNumberStr discNumber:(NSInteger*)discNumber trackNumber:(NSInteger*)trackNumber
 {
     unichar ch0 = [trackNumberStr characterAtIndex:0];
@@ -285,9 +267,9 @@
     if(aTableView == self.myAlbumTableView)
         return myAlbums.count;
     else if(aTableView == self.refAlbumCandidatesTableView)
-        return refAlbumCandidates.count;
+        return refAlbums.count;
     else if(aTableView == self.tracksTableView)
-        return myTracks.count;
+        return selectedMyAlbum.tracks.count;
     else
         assert(false);
 }
@@ -312,11 +294,11 @@
     {
         assert([identifier isEqualToString:@"AlbumCell"]);
         
-        RefAlbum* refAlbum = self.refAlbumCandidates[row];
+        RefAlbum* refAlbum_ = self.refAlbums[row];
         
         RefAlbumCandidatesCellView* cellView = [tableView makeViewWithIdentifier:identifier owner:self];
-        cellView.name.stringValue = refAlbum.name;
-        cellView.artist.stringValue = refAlbum.artist;
+        cellView.name.stringValue = refAlbum_.name;
+        cellView.artist.stringValue = refAlbum_.artist;
         
         return cellView;
     }
@@ -324,7 +306,7 @@
     {
         assert([identifier isEqualToString:@"TrackCell"]);
         
-        iTunesFileTrack* track = self.myTracks[row];
+        iTunesFileTrack* track = self.selectedMyAlbum.tracks[row];
         
         TracksCellView* cellView = [tableView makeViewWithIdentifier:identifier owner:self];
         cellView.name.stringValue = track.name;
@@ -336,6 +318,40 @@
         assert(false);
 }
 
+- (BOOL)tableView:(NSTableView *)tableView shouldSelectRow:(NSInteger)row
+{
+    if (tableView == self.myAlbumTableView)
+    {
+        MyAlbum* album = self.myAlbums[row];
+        
+        // Sort tracks by track no.
+        NSSortDescriptor *discSortDesc = [[NSSortDescriptor alloc] initWithKey:@"discNumber" ascending:YES];
+        NSSortDescriptor *trackSortDesc = [[NSSortDescriptor alloc] initWithKey:@"trackNumber" ascending:YES];
+        [album.tracks sortUsingDescriptors:@[discSortDesc, trackSortDesc]];
+        
+        // 트랙 넘버가 중복되지 않는지 확인
+        NSInteger prevDiscNum = -1;
+        NSInteger prevTrackNum = -1;
+        bool isSomeError = false;
+        for (iTunesFileTrack *track in album.tracks)
+        {
+            if([track discNumber] == prevDiscNum && [track trackNumber] == prevTrackNum)
+            {
+                
+                isSomeError = true;
+                NSString *errMsg = [NSString stringWithFormat:@"'%@'의 트랙 번호가 이전 곡과 동일합니다.", [track name]];
+                [self displayErrorMsgOfItunesSelection:errMsg];
+                break;
+            }
+            prevDiscNum = [track discNumber];
+            prevTrackNum = [track trackNumber];
+        }
+        
+        return isSomeError == false;
+    }
+    else return true;
+}
+
 - (void)tableViewSelectionDidChange:(NSNotification *)aNotification
 {
     NSTableView* tableView = [aNotification object];
@@ -343,22 +359,21 @@
     
     if (tableView == self.myAlbumTableView)
     {
-        MyAlbum* album = self.myAlbums[idx];
-        NSLog(@"Album '%@' is selected", album.name);
+        MyAlbum* myAlbum = self.myAlbums[idx];
+        NSLog(@"Album '%@' is selected", myAlbum.name);
         
         NSSortDescriptor *trackNumberSortDesc = [[NSSortDescriptor alloc] initWithKey:@"trackNumber" ascending:YES];
-        [album.tracks sortUsingDescriptors:@[trackNumberSortDesc]];
-        [album setDiscNumber];
-        self.myTracks = album.tracks;
+        [myAlbum.tracks sortUsingDescriptors:@[trackNumberSortDesc]];
+        self.selectedMyAlbum = myAlbum;
         
-        [self reloadRefAlbumCandidatesTable:album.name];
+        [self reloadRefAlbumCandidatesTable:selectedMyAlbum.name];
     }
     else if(tableView == self.refAlbumCandidatesTableView)
     {
-        RefAlbumCandidate* candidate = refAlbumCandidates[idx];
-        NSLog(@"Candidate '%@' is selected", candidate.name);
+        self.selectedRefAlbum = refAlbums[idx];
+        NSLog(@"Candidate '%@' is selected", self.selectedRefAlbum.name);
         
-        [self reloadTracksTable:candidate.urlStr];
+        [self reloadTracksTable];
     }
     else if(tableView == self.tracksTableView)
     {
@@ -370,10 +385,10 @@
 - (IBAction)updateTracks:(id)sender
 {
     // Update informations
-    for(NSInteger i = 0; i < [self.myTracks count]; ++i)
+    for(NSInteger i = 0; i < self.selectedMyAlbum.tracks.count; ++i)
     {
-        iTunesFileTrack* myTrack = self.myTracks[i];
-        RefTrack* refTrack = self.refAlbum.refTracks[i];
+        iTunesFileTrack* myTrack = self.selectedMyAlbum.tracks[i];
+        RefTrack* refTrack = self.selectedRefAlbum.refTracks[i];
         
         NSLog(@"변경: %@ -> %@", [myTrack name], [refTrack name]);
         
@@ -381,11 +396,11 @@
         [myTrack setLyrics:[refTrack lyrics]];
         [myTrack setArtist:[refTrack artist]];
         [myTrack setGenre:[refTrack genre]];
-        [myTrack setAlbumArtist:[refAlbum artist]];
-        [myTrack setYear:[refAlbum year]];
-        [myTrack setAlbum:[refAlbum name]];
+        [myTrack setAlbumArtist:self.selectedRefAlbum.artist];
+        [myTrack setYear:self.selectedRefAlbum.year];
+        [myTrack setAlbum:self.selectedRefAlbum.name];
         
-        NSString* comment = [NSString stringWithFormat:@"%@\n%@", @"Ver.0.0.2", refTrackUrlStr];
+        NSString* comment = [NSString stringWithFormat:@"%@\n%@", @"Ver.0.0.3", refTrack.urlStr];
         [myTrack setComment:comment];
     }
     
@@ -396,5 +411,6 @@
 // Version info
 // 0.0.1 이름, 아티스트, 앨범 아티스트, 연도, 장르, 앨범 제목, 가사
 // 0.0.2 decoding html character ex. &amp;
+// 0.0.3 fix for ref track's url
 
 @end

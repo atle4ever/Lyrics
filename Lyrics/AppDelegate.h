@@ -7,32 +7,26 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import "MyAlbum.h"
 #import "RefAlbum.h"
-#import "RefTrack.h"
 
 @interface AppDelegate : NSObject <NSApplicationDelegate, NSTableViewDataSource, NSTableViewDelegate>
 {
-    RefAlbum *refAlbum;
-    NSMutableArray *myTracks;
     NSMutableArray *myAlbums;
-    NSMutableArray *refAlbumCandidates;
-    NSString* refTrackUrlStr;
+    MyAlbum* selectedMyAlbum;
+    
+    NSMutableArray *refAlbums;
+    RefAlbum *selectedRefAlbum;
 }
 
-@property RefAlbum* refAlbum;
-
-@property NSMutableArray* myTracks;
 @property NSMutableArray* myAlbums;
-@property NSMutableArray* refAlbumCandidates;
-@property NSString* refTrackUrlStr;
+@property MyAlbum* selectedMyAlbum;
+@property NSMutableArray* refAlbums;
+@property RefAlbum* selectedRefAlbum;
 
+// UI
 @property (assign) IBOutlet NSTableView* myAlbumTableView;
 @property (assign) IBOutlet NSTableView* tracksTableView;
 @property (assign) IBOutlet NSTableView* refAlbumCandidatesTableView;
 
-- (void)displayErrorMsgOfItunesSelection:(NSString*) msg;
-- (void)getRefTrackFromWeb:(RefTrack*)refTrack toRefAlbum:(RefAlbum*)refAlbum;
-- (void)getTrackNumberFrom:(NSString*)trackNumberStr discNumber:(NSInteger*)discNumber trackNumber:(NSInteger*)trackNumber;
-- (void)reloadMyAlbumTable;
-- (void)reloadTracksTable:(NSString*)refAlbumUrlStr;
 @end

@@ -27,18 +27,12 @@
 {
     assert([[track album] isEqualToString:name]);
     
+    // If discNumber ins't set, set as 1 (default)
+    if(track.discNumber == 0) track.discNumber = 1;
+    
     [tracks addObject:track];
     
     dateAdded = [dateAdded laterDate:[track dateAdded]];
 }
-
-- (void) setDiscNumber
-{
-    for (iTunesFileTrack* track in tracks) {
-        if(track.discNumber == 0) track.discNumber = 1;
-    }
-}
-
-
 
 @end

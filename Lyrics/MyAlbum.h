@@ -21,6 +21,5 @@
 @property NSMutableArray* tracks;
 
 - (void) addTrack:(iTunesTrack*)track;
-- (void) setDiscNumber;
 
 @end

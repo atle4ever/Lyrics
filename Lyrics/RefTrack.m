@@ -16,6 +16,7 @@
 @synthesize genre;
 @synthesize discNumber;
 @synthesize trackNumber;
+@synthesize urlStr;
 
 - (id) initWithName:(NSString *)aName
 {

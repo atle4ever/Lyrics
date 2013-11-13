@@ -14,15 +14,17 @@
 @synthesize refTracks;
 @synthesize artist;
 @synthesize year;
+@synthesize urlStr;
 
-
-- (id)initWithName:(NSString *)aName numOfMusic:(NSUInteger)num
+- (id)initWithName:(NSString*)aName artist:(NSString*)aArtist year:(NSInteger)aYear urlStr:(NSString*)aUrlStr
 {
     self = [super init];
     
     [self setName:[aName copy]];
-    
-    [self setRefTracks:[[NSMutableArray alloc] initWithCapacity:num]];
+    [self setRefTracks:[[NSMutableArray alloc] init]];
+    [self setArtist:[aArtist copy]];
+    [self setYear:aYear];
+    [self setUrlStr:[aUrlStr copy]];
     
     return self;
 }
