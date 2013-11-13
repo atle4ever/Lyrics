@@ -7,18 +7,15 @@
 //
 
 #import "AppDelegate.h"
-#import "RefAlbumSelector.h"
 #import "iTunes.h"
 #import "MyAlbum.h"
 #import "RefAlbum.h"
-#import "RefAlbumCandidatesCellView.h"
 #import "TracksCellView.h"
+#import "MyAlbumCellView.h"
+#import "RefAlbumCandidatesCellView.h"
 #import "RefAlbumCandidate.h"
 #import "RefTrack.h"
-#import "UICheckBox.h"
-#import "UILabel.h"
 #import "NSString+HTML.h"
-#import "MyAlbumCellView.h"
 
 @implementation AppDelegate
 
@@ -26,7 +23,6 @@
 @synthesize myTracks;
 @synthesize myAlbums;
 @synthesize refAlbumCandidates;
-@synthesize willBeUpdated;
 @synthesize refTrackUrlStr;
 
 - (void)displayErrorMsgOfItunesSelection:(NSString*) msg
@@ -79,6 +75,31 @@
     NSSortDescriptor *dateAddedSortDesc = [[NSSortDescriptor alloc] initWithKey:@"dateAdded" ascending:NO];
     [myAlbums sortUsingDescriptors:@[dateAddedSortDesc]];
     
+/* TODO: 새로운 코드에 아래 사항을 추가할 것
+        // Sort tracks by track no.
+        NSSortDescriptor *discSortDesc = [[NSSortDescriptor alloc] initWithKey:@"discNumber" ascending:YES];
+        NSSortDescriptor *trackSortDesc = [[NSSortDescriptor alloc] initWithKey:@"trackNumber" ascending:YES];
+        [myTracks sortUsingDescriptors:@[discSortDesc, trackSortDesc]];
+        
+        // 트랙 넘버가 중복되지 않는지 확인
+        NSInteger prevDiscNum = -1;
+        NSInteger prevTrackNum = -1;
+        for (iTunesFileTrack *track in myTracks)
+        {
+            if([track discNumber] == prevDiscNum && [track trackNumber] == prevTrackNum)
+            {
+                
+                isSomeError = false;
+                NSString *errMsg = [NSString stringWithFormat:@"'%@'의 트랙 번호가 이전 곡과 동일합니다.", [track name]];
+                [self displayErrorMsgOfItunesSelection:errMsg];
+                break;
+            }
+            prevDiscNum = [track discNumber];
+            prevTrackNum = [track trackNumber];
+        }
+        if(isSomeError == false) continue;
+ */
+    
     [self.myAlbumTableView reloadData];
 }
 
@@ -104,6 +125,19 @@
     }
     
     [self.refAlbumCandidatesTableView reloadData];
+    
+    /* TODO: 직접 사용자에게 input을 받을 수 있도록
+    
+    // Get ref album page's URL from user
+    NSAlert *dialog = [NSAlert alertWithMessageText:@"앨범 URL을 입력해주세요." defaultButton:@"확인" alternateButton:@"취소" otherButton:nil informativeTextWithFormat:@"현재 벅스 사이트만 지원합니다."];
+    NSTextField *userTextInput = [[NSTextField alloc] initWithFrame:NSMakeRect(0, 0, 300, 24)];
+    [dialog setAccessoryView:userTextInput];
+    NSInteger clicked = [dialog runModal];
+    if (clicked == NSAlertDefaultReturn)
+        return [userTextInput stringValue];
+    else
+        return nil;
+     */
 }
 
 - (void)reloadTracksTable:(NSString*)refAlbumUrlStr
@@ -169,106 +203,6 @@
     }
     
     [self.tracksTableView reloadData];
-}
-
-- (void)getMyTracksFromItunes
-{
-    iTunesApplication *iTunes = [SBApplication applicationWithBundleIdentifier:@"com.apple.iTunes"];
-    NSArray* playlists = [[[[iTunes sources] get][0] playlists] get];
-    iTunesPlaylist* musics = nil;
-    for(iTunesPlaylist* pl in playlists)
-    {
-        if([[pl name]  isEqual: @"음악"])
-        {
-            musics = pl;
-            break;
-        }
-    }
-    assert(musics != nil);
-    
-    myAlbums = [[NSMutableArray alloc] init];
-    for(iTunesFileTrack* track in [[musics tracks] get])
-    {
-        NSString* albumName = [track album];
-        MyAlbum* album = nil;
-        for(MyAlbum* candidate in myAlbums)
-        {
-            if([[candidate name] isEqualToString:albumName])
-            {
-                album = candidate;
-                break;
-            }
-        }
-        
-        if(album == nil)
-        {
-            album = [[MyAlbum alloc] init];
-            [album setName:albumName];
-            [album setDateAdded:[track dateAdded]];
-            [myAlbums addObject:album];
-        }
-        assert(album != nil);
-        [album addTrack:track];
-    }
-    
-    NSSortDescriptor *dateAddedSortDesc = [[NSSortDescriptor alloc] initWithKey:@"dateAdded" ascending:NO];
-    [myAlbums sortUsingDescriptors:@[dateAddedSortDesc]];
-    
-    [self.myAlbumTableView reloadData];
-    
-    while(true)
-    {
-        myTracks = [[iTunes selection] get];
-        if([myTracks count] == 0)
-        {
-            [self displayErrorMsgOfItunesSelection:@"아이튠즈에서 업데이트할 곡을 선택해주세요."];
-            continue;
-        }
-        
-        // 디스크 넘버 확인
-        for (iTunesFileTrack *track in myTracks)
-            if([track discNumber] == 0)
-                [track setDiscNumber:1];
-        
-        // 모든 곡이 동일한 앨범에 속해 있는지 확인
-        bool isSomeError = true;
-        NSString *albumTitle = [[myTracks objectAtIndex:0] album];
-        for (iTunesFileTrack *track in myTracks)
-        {
-            if([[track album] compare:albumTitle] != 0)
-            {
-                isSomeError = false;
-                [self displayErrorMsgOfItunesSelection:@"같은 앨범의 곡을 선택해주세요."];
-                break;
-            }
-        }
-        if(isSomeError == false) continue;
-        
-        // Sort tracks by track no.
-        NSSortDescriptor *discSortDesc = [[NSSortDescriptor alloc] initWithKey:@"discNumber" ascending:YES];
-        NSSortDescriptor *trackSortDesc = [[NSSortDescriptor alloc] initWithKey:@"trackNumber" ascending:YES];
-        [myTracks sortUsingDescriptors:@[discSortDesc, trackSortDesc]];
-        
-        // 트랙 넘버가 중복되지 않는지 확인
-        NSInteger prevDiscNum = -1;
-        NSInteger prevTrackNum = -1;
-        for (iTunesFileTrack *track in myTracks)
-        {
-            if([track discNumber] == prevDiscNum && [track trackNumber] == prevTrackNum)
-            {
-                
-                isSomeError = false;
-                NSString *errMsg = [NSString stringWithFormat:@"'%@'의 트랙 번호가 이전 곡과 동일합니다.", [track name]];
-                [self displayErrorMsgOfItunesSelection:errMsg];
-                break;
-            }
-            prevDiscNum = [track discNumber];
-            prevTrackNum = [track trackNumber];
-        }
-        if(isSomeError == false) continue;
-        
-        break;
-    }
 }
 
 - (void)getRefTrackFromWeb:(RefTrack*)refTrack toRefAlbum:(RefAlbum*)newRefAlbum
@@ -341,154 +275,14 @@
     }
 }
 
-- (RefAlbum*)getRefAlbumFromWeb:(NSString*)refAlbumUrlStr
-{
-    NSURL *refAlbumUrl = [[NSURL alloc] initWithString:refAlbumUrlStr];
-    NSError *err=nil;
-    NSXMLDocument *refAlbumPage = [[NSXMLDocument alloc] initWithContentsOfURL:refAlbumUrl
-                                                                 options:NSXMLDocumentTidyXML
-                                                                   error:&err];
-    
-    // Get ref album's infos
-    // Track list
-    NSArray *refTrackNodes = [refAlbumPage nodesForXPath:@"//*[@id=\"idTrackList\"]/li" error:&err];
-    
-    // Title
-    NSArray *nodes = [refAlbumPage nodesForXPath:@"//*[@id=\"container\"]/h2/text()" error:&err];
-    assert([nodes count] == 1);
-    NSString *refAlbumName = [[nodes[0] description] kv_decodeHTMLCharacterEntities];
-    
-    // Artist
-    nodes = [refAlbumPage nodesForXPath:@"//*[@id=\"content\"]/div[1]/div[2]/div[2]/dl/dd[1]/strong/a/text()" error:&err];
-    if([nodes count] != 1)  // when artist isn't linked
-        nodes = [refAlbumPage nodesForXPath:@"//*[@id=\"content\"]/div[1]/div[2]/div[2]/dl/dd[1]/strong/text()" error:&err];
-    assert([nodes count] == 1);
-    NSString *refAlbumArtist = [[nodes[0] description] kv_decodeHTMLCharacterEntities];
-    
-    // Date
-    nodes = [refAlbumPage nodesForXPath:@"//*[@id=\"content\"]/div[1]/div[2]/div[2]/dl/dd[5]/text()" error:&err];
-    assert([nodes count] == 1);
-    NSInteger refAlbumDate = [[[nodes[0] description] substringToIndex:4] integerValue];
-    
-    RefAlbum* newRefAlbum = [[RefAlbum alloc] initWithName:refAlbumName numOfMusic:[nodes count]];
-    [newRefAlbum setArtist:refAlbumArtist];
-    [newRefAlbum setYear:refAlbumDate];
-    
-    // Get ref track's infos
-    for (NSXMLNode* refTrackNode in refTrackNodes)
-    {
-        // trackNumber
-        NSString* trackNumberStr = [[refTrackNode nodesForXPath:@"./dl/dt/a/text()" error:&err][0] stringValue];
-        NSInteger trackNumber, discNumber;
-        [self getTrackNumberFrom:trackNumberStr discNumber:&discNumber trackNumber:&trackNumber];
-        BOOL isFound = false;
-        for (iTunesFileTrack *track in myTracks)
-        {
-            if([track discNumber] == discNumber && [track trackNumber] == trackNumber)
-            {
-                isFound = true;
-                break;
-            }
-        }
-        if(isFound == false) continue;
-        
-        // Title
-        NSString* name = [[[refTrackNode nodesForXPath:@"./dl/dt/a/@title" error:&err][0] stringValue] kv_decodeHTMLCharacterEntities];
-        RefTrack *refTrack = [[RefTrack alloc] initWithName:name];
-        
-        // Get ref track page
-        NSString* hrefStr = [[refTrackNode nodesForXPath:@"./dl/dt/a/@href" error:&err][0] stringValue];
-        NSString* refTrackId = [[NSNumber numberWithInteger:[[hrefStr substringWithRange:NSMakeRange(35, 9)] integerValue]] stringValue];
-        [self setRefTrackUrlStr:[NSString stringWithFormat:@"http://music.bugs.co.kr/track/%@", refTrackId]];
-        [self getRefTrackFromWeb:refTrack toRefAlbum:newRefAlbum];
-    }
-    
-    return newRefAlbum;
-}
-
-- (NSString*)getRefAlbumUrl
-{
-    NSString* albumSearchUrlStr = [NSString stringWithFormat:@"http://search.bugs.co.kr/album?q=%@",((iTunesFileTrack*)myTracks[0]).artist];
-    NSURL *albumSearchUrl = [[NSURL alloc] initWithString:[albumSearchUrlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-    NSError *err=nil;
-    NSXMLDocument *albumSearchPage = [[NSXMLDocument alloc] initWithContentsOfURL:albumSearchUrl
-                                                                 options:NSXMLDocumentTidyXML
-                                                                   error:&err];
-    
-    // Album list
-    NSArray *albumNodes = [albumSearchPage nodesForXPath:@"//*[@id=\"content\"]/div/ul/li" error:&err];
-    
-    NSMutableArray* refAlbumCandidates = [[NSMutableArray alloc] initWithCapacity:[albumNodes count]];
-    for (NSXMLNode* albumNode in albumNodes)
-    {
-        NSString* albumName = [[[albumNode nodesForXPath:@"./dl/dt/a/text()" error:&err][0] stringValue] kv_decodeHTMLCharacterEntities];
-        NSString* albumArtist = [[[albumNode nodesForXPath:@"./dl/dd/a/@title" error:&err][0] stringValue] kv_decodeHTMLCharacterEntities];
-        NSString* albumUrlStr = [[[albumNode nodesForXPath:@"./dl/dt/a/@href" error:&err][0] stringValue] kv_decodeHTMLCharacterEntities];
-        [refAlbumCandidates addObject:[[RefAlbumCandidate alloc] initWithName:albumName artist:albumArtist urlStr:albumUrlStr]];
-    }
-    
-    RefAlbumSelector* refAlbumSelector = [[RefAlbumSelector alloc] initWithWindowNibName:@"RefAlbumSelector"];
-    [refAlbumSelector setRefAlbumCandidates:refAlbumCandidates];
-    [[NSApplication sharedApplication] runModalForWindow:refAlbumSelector.window];
-    
-    if(refAlbumSelector.selected >= 0)
-    {
-        RefAlbumCandidate* candidate = refAlbumCandidates[refAlbumSelector.selected];
-        return candidate.urlStr;
-    }
-    
-    // Get ref album page's URL from user
-    NSAlert *dialog = [NSAlert alertWithMessageText:@"앨범 URL을 입력해주세요." defaultButton:@"확인" alternateButton:@"취소" otherButton:nil informativeTextWithFormat:@"현재 벅스 사이트만 지원합니다."];
-    NSTextField *userTextInput = [[NSTextField alloc] initWithFrame:NSMakeRect(0, 0, 300, 24)];
-    [dialog setAccessoryView:userTextInput];
-    NSInteger clicked = [dialog runModal];
-    if (clicked == NSAlertDefaultReturn)
-        return [userTextInput stringValue];
-    else
-        return nil;
-}
-
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
     [self reloadMyAlbumTable];
-    // [self getMyTracksFromItunes];
-    
-    // NSString *refAlbumUrlStr;
-    // while(true)
-    // {
-    //     refAlbumUrlStr = [self getRefAlbumUrl];
-    //     [self.window display];
-    //     if(refAlbumUrlStr == nil)
-    //         [[NSApplication sharedApplication] terminate:nil];
-        
-    //     // Get album page
-    //     [self setRefAlbum:[self getRefAlbumFromWeb:refAlbumUrlStr]];
-        
-    //     if([self.myTracks count] == [self.refAlbum.refTracks count])
-    //         break;
-    //     else
-    //     {
-    //         NSAlert *dialog = [NSAlert alertWithMessageText:@"틀린 앨범입니다. 다시 선택해주세요." defaultButton:@"확인" alternateButton:nil otherButton:nil informativeTextWithFormat:@""];
-    //         [dialog runModal];
-    //     }
-    // }
-    
-    // Create array for selected
-    NSInteger nSel = [self.myTracks count];
-    willBeUpdated = [[NSMutableArray alloc] initWithCapacity:nSel];
-    for(int i = 0; i < nSel; ++i)
-        [willBeUpdated addObject:[NSNumber numberWithInt:NSOnState]];
-    
-    [self.tableView reloadData];
 }
-
-
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)aTableView
 {
-    if(aTableView == self.tableView)
-        return [refAlbum.refTracks count];
-    else if(aTableView == self.myAlbumTableView)
+    if(aTableView == self.myAlbumTableView)
         return myAlbums.count;
     else if(aTableView == self.refAlbumCandidatesTableView)
         return refAlbumCandidates.count;
@@ -538,6 +332,8 @@
         
         return cellView;
     }
+    else
+        assert(false);
 }
 
 - (void)tableViewSelectionDidChange:(NSNotification *)aNotification
@@ -564,17 +360,11 @@
         
         [self reloadTracksTable:candidate.urlStr];
     }
-}
-
-
-- (IBAction) clickCheckBox:(id)sender
-{
-    UICheckBox *check = sender;
-    NSNumber* flag = self.willBeUpdated[[check index]];
-    if([flag integerValue] == NSOnState)
-        [self.willBeUpdated replaceObjectAtIndex:[check index] withObject:[NSNumber numberWithInteger:NSOffState]];
+    else if(tableView == self.tracksTableView)
+    {
+    }
     else
-        [self.willBeUpdated replaceObjectAtIndex:[check index] withObject:[NSNumber numberWithInteger:NSOnState]];
+        assert(false);
 }
 
 - (IBAction)updateTracks:(id)sender

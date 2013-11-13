@@ -8,12 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		DF0B33AA182E8721004603F8 /* MyAlbum.m in Sources */ = {isa = PBXBuildFile; fileRef = DF0B33A9182E8721004603F8 /* MyAlbum.m */; };
-		DF22D39517BFC5B1008F15A6 /* CustomCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF22D39417BFC5B1008F15A6 /* CustomCell.xib */; };
 		DF5B305117BBC52D004A58B8 /* ScriptingBridge.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF5B305017BBC52D004A58B8 /* ScriptingBridge.framework */; };
-		DF78DAD617C0F01300B53A5C /* UICheckBox.m in Sources */ = {isa = PBXBuildFile; fileRef = DF78DAD517C0F01300B53A5C /* UICheckBox.m */; };
 		DF8707E0181E82B700944ADC /* RefAlbumCandidate.m in Sources */ = {isa = PBXBuildFile; fileRef = DF8707DF181E82B700944ADC /* RefAlbumCandidate.m */; };
-		DF8707E6181E883F00944ADC /* RefAlbumSelector.m in Sources */ = {isa = PBXBuildFile; fileRef = DF8707E4181E883F00944ADC /* RefAlbumSelector.m */; };
-		DF8707E7181E883F00944ADC /* RefAlbumSelector.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF8707E5181E883F00944ADC /* RefAlbumSelector.xib */; };
 		DF93B7DE182E129C00D296F2 /* NSString+HTML.m in Sources */ = {isa = PBXBuildFile; fileRef = DF93B7DD182E129C00D296F2 /* NSString+HTML.m */; };
 		DFC148E918313CDC00F10A1A /* RefAlbumCandidatesCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = DFC148E818313CDC00F10A1A /* RefAlbumCandidatesCellView.m */; };
 		DFC148EC183143DB00F10A1A /* TracksCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = DFC148EB183143DB00F10A1A /* TracksCellView.m */; };
@@ -32,7 +28,6 @@
 		DFE1879717AE0CA6002ED7BE /* RefTrack.m in Sources */ = {isa = PBXBuildFile; fileRef = DFE1879517AE0CA6002ED7BE /* RefTrack.m */; };
 		DFE1879A17AE0CBA002ED7BE /* RefAlbum.m in Sources */ = {isa = PBXBuildFile; fileRef = DFE1879917AE0CBA002ED7BE /* RefAlbum.m */; };
 		DFE1879B17AE0CBA002ED7BE /* RefAlbum.m in Sources */ = {isa = PBXBuildFile; fileRef = DFE1879917AE0CBA002ED7BE /* RefAlbum.m */; };
-		DFF4A23817C32BB300E4D58C /* UILabel.m in Sources */ = {isa = PBXBuildFile; fileRef = DFF4A23717C32BB300E4D58C /* UILabel.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,16 +43,10 @@
 /* Begin PBXFileReference section */
 		DF0B33A8182E8721004603F8 /* MyAlbum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyAlbum.h; sourceTree = "<group>"; };
 		DF0B33A9182E8721004603F8 /* MyAlbum.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyAlbum.m; sourceTree = "<group>"; };
-		DF22D39417BFC5B1008F15A6 /* CustomCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CustomCell.xib; sourceTree = "<group>"; };
 		DF5B304F17BBC4F3004A58B8 /* iTunes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iTunes.h; sourceTree = "<group>"; };
 		DF5B305017BBC52D004A58B8 /* ScriptingBridge.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ScriptingBridge.framework; path = System/Library/Frameworks/ScriptingBridge.framework; sourceTree = SDKROOT; };
-		DF78DAD417C0F01300B53A5C /* UICheckBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UICheckBox.h; sourceTree = "<group>"; };
-		DF78DAD517C0F01300B53A5C /* UICheckBox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UICheckBox.m; sourceTree = "<group>"; };
 		DF8707DE181E82B700944ADC /* RefAlbumCandidate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RefAlbumCandidate.h; sourceTree = "<group>"; };
 		DF8707DF181E82B700944ADC /* RefAlbumCandidate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RefAlbumCandidate.m; sourceTree = "<group>"; };
-		DF8707E3181E883F00944ADC /* RefAlbumSelector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RefAlbumSelector.h; sourceTree = "<group>"; };
-		DF8707E4181E883F00944ADC /* RefAlbumSelector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RefAlbumSelector.m; sourceTree = "<group>"; };
-		DF8707E5181E883F00944ADC /* RefAlbumSelector.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RefAlbumSelector.xib; sourceTree = "<group>"; };
 		DF93B7DC182E129C00D296F2 /* NSString+HTML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+HTML.h"; path = "../NSString+HTML.h"; sourceTree = "<group>"; };
 		DF93B7DD182E129C00D296F2 /* NSString+HTML.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+HTML.m"; path = "../NSString+HTML.m"; sourceTree = "<group>"; };
 		DFC148E718313CDC00F10A1A /* RefAlbumCandidatesCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RefAlbumCandidatesCellView.h; sourceTree = "<group>"; };
@@ -89,8 +78,6 @@
 		DFE1879517AE0CA6002ED7BE /* RefTrack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RefTrack.m; sourceTree = "<group>"; };
 		DFE1879817AE0CBA002ED7BE /* RefAlbum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RefAlbum.h; sourceTree = "<group>"; };
 		DFE1879917AE0CBA002ED7BE /* RefAlbum.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RefAlbum.m; sourceTree = "<group>"; };
-		DFF4A23617C32BB300E4D58C /* UILabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UILabel.h; sourceTree = "<group>"; };
-		DFF4A23717C32BB300E4D58C /* UILabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UILabel.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -118,15 +105,30 @@
 		DF0B33A7182E8699004603F8 /* UI */ = {
 			isa = PBXGroup;
 			children = (
-				DF8707E5181E883F00944ADC /* RefAlbumSelector.xib */,
 				DFC2750717A3F729003D99EA /* MainMenu.xib */,
-				DF22D39417BFC5B1008F15A6 /* CustomCell.xib */,
-				DFF4A23617C32BB300E4D58C /* UILabel.h */,
-				DFF4A23717C32BB300E4D58C /* UILabel.m */,
-				DF78DAD417C0F01300B53A5C /* UICheckBox.h */,
-				DF78DAD517C0F01300B53A5C /* UICheckBox.m */,
+				DFDA9D47182FE16C0070C07A /* MyAlbumCellView.h */,
+				DFDA9D48182FE16C0070C07A /* MyAlbumCellView.m */,
+				DFC148E718313CDC00F10A1A /* RefAlbumCandidatesCellView.h */,
+				DFC148E818313CDC00F10A1A /* RefAlbumCandidatesCellView.m */,
+				DFC148EA183143DB00F10A1A /* TracksCellView.h */,
+				DFC148EB183143DB00F10A1A /* TracksCellView.m */,
 			);
 			name = UI;
+			sourceTree = "<group>";
+		};
+		DF3A0F2E1833726E00A093FD /* Data structure */ = {
+			isa = PBXGroup;
+			children = (
+				DF0B33A8182E8721004603F8 /* MyAlbum.h */,
+				DF0B33A9182E8721004603F8 /* MyAlbum.m */,
+				DFE1879417AE0CA6002ED7BE /* RefTrack.h */,
+				DFE1879517AE0CA6002ED7BE /* RefTrack.m */,
+				DFE1879817AE0CBA002ED7BE /* RefAlbum.h */,
+				DFE1879917AE0CBA002ED7BE /* RefAlbum.m */,
+				DF8707DE181E82B700944ADC /* RefAlbumCandidate.h */,
+				DF8707DF181E82B700944ADC /* RefAlbumCandidate.m */,
+			);
+			name = "Data structure";
 			sourceTree = "<group>";
 		};
 		DFC274E617A3F728003D99EA = {
@@ -172,29 +174,14 @@
 		DFC274F817A3F729003D99EA /* Lyrics */ = {
 			isa = PBXGroup;
 			children = (
-				DF0B33A8182E8721004603F8 /* MyAlbum.h */,
-				DF0B33A9182E8721004603F8 /* MyAlbum.m */,
 				DF93B7DC182E129C00D296F2 /* NSString+HTML.h */,
 				DF93B7DD182E129C00D296F2 /* NSString+HTML.m */,
 				DF5B304F17BBC4F3004A58B8 /* iTunes.h */,
 				DFC2750417A3F729003D99EA /* AppDelegate.h */,
 				DFC2750517A3F729003D99EA /* AppDelegate.m */,
-				DFC274F917A3F729003D99EA /* Supporting Files */,
-				DFE1879417AE0CA6002ED7BE /* RefTrack.h */,
-				DFE1879517AE0CA6002ED7BE /* RefTrack.m */,
-				DFE1879817AE0CBA002ED7BE /* RefAlbum.h */,
-				DFE1879917AE0CBA002ED7BE /* RefAlbum.m */,
-				DF8707DE181E82B700944ADC /* RefAlbumCandidate.h */,
-				DF8707DF181E82B700944ADC /* RefAlbumCandidate.m */,
-				DF8707E3181E883F00944ADC /* RefAlbumSelector.h */,
-				DF8707E4181E883F00944ADC /* RefAlbumSelector.m */,
+				DF3A0F2E1833726E00A093FD /* Data structure */,
 				DF0B33A7182E8699004603F8 /* UI */,
-				DFDA9D47182FE16C0070C07A /* MyAlbumCellView.h */,
-				DFDA9D48182FE16C0070C07A /* MyAlbumCellView.m */,
-				DFC148E718313CDC00F10A1A /* RefAlbumCandidatesCellView.h */,
-				DFC148E818313CDC00F10A1A /* RefAlbumCandidatesCellView.m */,
-				DFC148EA183143DB00F10A1A /* TracksCellView.h */,
-				DFC148EB183143DB00F10A1A /* TracksCellView.m */,
+				DFC274F917A3F729003D99EA /* Supporting Files */,
 			);
 			path = Lyrics;
 			sourceTree = "<group>";
@@ -303,9 +290,7 @@
 			files = (
 				DFC274FD17A3F729003D99EA /* InfoPlist.strings in Resources */,
 				DFC2750317A3F729003D99EA /* Credits.rtf in Resources */,
-				DF8707E7181E883F00944ADC /* RefAlbumSelector.xib in Resources */,
 				DFC2750917A3F729003D99EA /* MainMenu.xib in Resources */,
-				DF22D39517BFC5B1008F15A6 /* CustomCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -346,13 +331,10 @@
 				DFE1879617AE0CA6002ED7BE /* RefTrack.m in Sources */,
 				DF8707E0181E82B700944ADC /* RefAlbumCandidate.m in Sources */,
 				DF93B7DE182E129C00D296F2 /* NSString+HTML.m in Sources */,
-				DF8707E6181E883F00944ADC /* RefAlbumSelector.m in Sources */,
 				DFE1879A17AE0CBA002ED7BE /* RefAlbum.m in Sources */,
 				DFC148EC183143DB00F10A1A /* TracksCellView.m in Sources */,
 				DFC148E918313CDC00F10A1A /* RefAlbumCandidatesCellView.m in Sources */,
-				DF78DAD617C0F01300B53A5C /* UICheckBox.m in Sources */,
 				DFDA9D49182FE16C0070C07A /* MyAlbumCellView.m in Sources */,
-				DFF4A23817C32BB300E4D58C /* UILabel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
