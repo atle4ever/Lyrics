@@ -10,7 +10,7 @@
 #import "MyAlbum.h"
 #import "RefAlbum.h"
 
-@interface AppDelegate : NSObject <NSApplicationDelegate, NSTableViewDataSource, NSTableViewDelegate>
+@interface AppDelegate : NSObject <NSApplicationDelegate, NSTableViewDataSource, NSTableViewDelegate, NSOutlineViewDataSource, NSOutlineViewDelegate>
 {
     NSMutableArray *myAlbums;
     MyAlbum* selectedMyAlbum;
@@ -25,7 +25,7 @@
 @property RefAlbum* selectedRefAlbum;
 
 // UI
-@property (assign) IBOutlet NSTableView* myAlbumTableView;
+@property (assign) IBOutlet NSOutlineView* myAlbumTableView;
 @property (assign) IBOutlet NSTableView* tracksTableView;
 @property (assign) IBOutlet NSTableView* refAlbumCandidatesTableView;
 

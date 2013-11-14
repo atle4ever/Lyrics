@@ -11,6 +11,7 @@
 @implementation MyAlbum
 
 @synthesize name;
+@synthesize version;
 @synthesize dateAdded;
 @synthesize tracks;
 
@@ -23,6 +24,15 @@
     return self;
 }
 
+- (NSString*) getVersionFrom:(iTunesTrack*)track
+{
+    NSString* comment = track.comment;
+    if([comment hasPrefix:@"Ver."])
+        return [comment componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]][0];
+    else
+        return @"";
+}
+
 - (void) addTrack:(iTunesTrack*)track
 {
     assert([[track album] isEqualToString:name]);
@@ -33,6 +43,9 @@
     [tracks addObject:track];
     
     dateAdded = [dateAdded laterDate:[track dateAdded]];
+    NSString* trackVer = [self getVersionFrom:track];
+    if([trackVer compare:version] < 0 || version == nil)
+        version = trackVer;
 }
 
 @end

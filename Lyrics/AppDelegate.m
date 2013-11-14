@@ -262,6 +262,7 @@
     [self reloadMyAlbumTable];
 }
 
+// Table Data Source methods
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)aTableView
 {
     if(aTableView == self.myAlbumTableView)
@@ -286,6 +287,7 @@
         
         MyAlbumCellView* cellView = [tableView makeViewWithIdentifier:identifier owner:self];
         cellView.name.stringValue = album.name;
+        cellView.version.stringValue = album.version;
         cellView.dateAdded.stringValue = album.dateAdded.description;
         
         return cellView;
@@ -318,6 +320,7 @@
         assert(false);
 }
 
+// Table Delegate methods
 - (BOOL)tableView:(NSTableView *)tableView shouldSelectRow:(NSInteger)row
 {
     if (tableView == self.myAlbumTableView)
@@ -381,6 +384,70 @@
     else
         assert(false);
 }
+
+// Outline Data Source methods
+- (NSInteger)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item {
+    if(item == nil)
+        return myAlbums.count;
+    
+    MyAlbum* myAlbum = item;
+    assert([myAlbum isKindOfClass:[MyAlbum class]]);
+    
+    return myAlbum.tracks.count;
+}
+
+- (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(id)item {
+    if(item == nil) YES;
+    
+    MyAlbum* myAlbum = item;
+    if([myAlbum isKindOfClass:[MyAlbum class]])
+        return YES;
+    else // iTunesFileTrack
+        return NO;
+}
+
+- (id)outlineView:(NSOutlineView *)outlineView child:(NSInteger)index ofItem:(id)item {
+    if(item == nil)
+        return self.myAlbums[index];
+    
+    MyAlbum* myAlbum = item;
+    assert([myAlbum isKindOfClass:[MyAlbum class]]);
+    return myAlbum.tracks[index];
+}
+
+- (NSView *)outlineView:(NSOutlineView *)outlineView viewForTableColumn:(NSTableColumn *)tableColumn item:(id)item {
+    NSString *identifier = [tableColumn identifier];
+    
+    if(item == nil) return nil;
+    
+    MyAlbum* myAlbum = item;
+    if([myAlbum isKindOfClass:[MyAlbum class]])
+    {
+        assert([identifier isEqualToString:@"MainCell"]);
+        
+        MyAlbumCellView* cellView = [outlineView makeViewWithIdentifier:identifier owner:self];
+        cellView.name.stringValue = myAlbum.name;
+        cellView.version.stringValue = myAlbum.version;
+        cellView.dateAdded.stringValue = myAlbum.dateAdded.description;
+        
+        return cellView;
+    }
+    
+    iTunesFileTrack* track = item;
+    
+    MyAlbumCellView* cellView = [outlineView makeViewWithIdentifier:identifier owner:self];
+    cellView.name.stringValue = track.name;
+    cellView.version.stringValue = @"";
+    cellView.dateAdded.stringValue = track.artist;
+    
+    return cellView;
+}
+
+// Outline Delegate methods
+
+// - (BOOL)outlineView:(NSOutlineView *)outlineView shouldEditTableColumn:(NSTableColumn *)tableColumn item:(id)item {
+//    return NO;
+// }
 
 - (IBAction)updateTracks:(id)sender
 {

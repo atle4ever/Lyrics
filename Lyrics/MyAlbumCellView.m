@@ -11,6 +11,7 @@
 @implementation MyAlbumCellView
 
 @synthesize name;
+@synthesize version;
 @synthesize dateAdded;
 
 - (id)initWithFrame:(NSRect)frame
