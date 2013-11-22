@@ -265,9 +265,7 @@
 // Table Data Source methods
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)aTableView
 {
-    if(aTableView == self.myAlbumTableView)
-        return myAlbums.count;
-    else if(aTableView == self.refAlbumCandidatesTableView)
+    if(aTableView == self.refAlbumCandidatesTableView)
         return refAlbums.count;
     else if(aTableView == self.tracksTableView)
         return selectedMyAlbum.tracks.count;
@@ -279,20 +277,7 @@
 {
     NSString *identifier = [tableColumn identifier];
     
-    if (tableView == self.myAlbumTableView)
-    {
-        assert([identifier isEqualToString:@"MainCell"]);
-        
-        MyAlbum* album = self.myAlbums[row];
-        
-        MyAlbumCellView* cellView = [tableView makeViewWithIdentifier:identifier owner:self];
-        cellView.name.stringValue = album.name;
-        cellView.version.stringValue = album.version;
-        cellView.dateAdded.stringValue = album.dateAdded.description;
-        
-        return cellView;
-    }
-    else if(tableView == self.refAlbumCandidatesTableView)
+    if(tableView == self.refAlbumCandidatesTableView)
     {
         assert([identifier isEqualToString:@"AlbumCell"]);
         
@@ -321,57 +306,12 @@
 }
 
 // Table Delegate methods
-- (BOOL)tableView:(NSTableView *)tableView shouldSelectRow:(NSInteger)row
-{
-    if (tableView == self.myAlbumTableView)
-    {
-        MyAlbum* album = self.myAlbums[row];
-        
-        // Sort tracks by track no.
-        NSSortDescriptor *discSortDesc = [[NSSortDescriptor alloc] initWithKey:@"discNumber" ascending:YES];
-        NSSortDescriptor *trackSortDesc = [[NSSortDescriptor alloc] initWithKey:@"trackNumber" ascending:YES];
-        [album.tracks sortUsingDescriptors:@[discSortDesc, trackSortDesc]];
-        
-        // 트랙 넘버가 중복되지 않는지 확인
-        NSInteger prevDiscNum = -1;
-        NSInteger prevTrackNum = -1;
-        bool isSomeError = false;
-        for (iTunesFileTrack *track in album.tracks)
-        {
-            if([track discNumber] == prevDiscNum && [track trackNumber] == prevTrackNum)
-            {
-                
-                isSomeError = true;
-                NSString *errMsg = [NSString stringWithFormat:@"'%@'의 트랙 번호가 이전 곡과 동일합니다.", [track name]];
-                [self displayErrorMsgOfItunesSelection:errMsg];
-                break;
-            }
-            prevDiscNum = [track discNumber];
-            prevTrackNum = [track trackNumber];
-        }
-        
-        return isSomeError == false;
-    }
-    else return true;
-}
-
 - (void)tableViewSelectionDidChange:(NSNotification *)aNotification
 {
     NSTableView* tableView = [aNotification object];
     NSInteger idx = [tableView selectedRow];
     
-    if (tableView == self.myAlbumTableView)
-    {
-        MyAlbum* myAlbum = self.myAlbums[idx];
-        NSLog(@"Album '%@' is selected", myAlbum.name);
-        
-        NSSortDescriptor *trackNumberSortDesc = [[NSSortDescriptor alloc] initWithKey:@"trackNumber" ascending:YES];
-        [myAlbum.tracks sortUsingDescriptors:@[trackNumberSortDesc]];
-        self.selectedMyAlbum = myAlbum;
-        
-        [self reloadRefAlbumCandidatesTable:selectedMyAlbum.name];
-    }
-    else if(tableView == self.refAlbumCandidatesTableView)
+    if(tableView == self.refAlbumCandidatesTableView)
     {
         self.selectedRefAlbum = refAlbums[idx];
         NSLog(@"Candidate '%@' is selected", self.selectedRefAlbum.name);
@@ -428,12 +368,14 @@
         MyAlbumCellView* cellView = [outlineView makeViewWithIdentifier:identifier owner:self];
         cellView.name.stringValue = myAlbum.name;
         cellView.version.stringValue = myAlbum.version;
-        cellView.dateAdded.stringValue = myAlbum.dateAdded.description;
+        cellView.dateAdded.stringValue = [myAlbum.dateAdded descriptionWithCalendarFormat:@"%Y-%m-%d 추가" timeZone:nil locale:[[NSUserDefaults standardUserDefaults] dictionaryRepresentation]];
         
         return cellView;
     }
     
+    // Row for 'iTunesFileTrack'
     iTunesFileTrack* track = item;
+    assert([track isKindOfClass:[SBObject class]]);
     
     MyAlbumCellView* cellView = [outlineView makeViewWithIdentifier:identifier owner:self];
     cellView.name.stringValue = track.name;
@@ -444,11 +386,68 @@
 }
 
 // Outline Delegate methods
+- (BOOL)outlineView:(NSOutlineView *)outlineView shouldSelectItem:(id)item
+{
+    if (outlineView == self.myAlbumTableView)
+    {
+        MyAlbum* album = item;
+        if([album isKindOfClass:[SBObject class]])
+            return false; // disable selection on iTunesFileTrack
+        
+        assert([album isKindOfClass:[MyAlbum class]]);
+        
+        // Sort tracks by track no.
+        NSSortDescriptor *discSortDesc = [[NSSortDescriptor alloc] initWithKey:@"discNumber" ascending:YES];
+        NSSortDescriptor *trackSortDesc = [[NSSortDescriptor alloc] initWithKey:@"trackNumber" ascending:YES];
+        [album.tracks sortUsingDescriptors:@[discSortDesc, trackSortDesc]];
+        
+        // 트랙 넘버가 중복되지 않는지 확인
+        NSInteger prevDiscNum = -1;
+        NSInteger prevTrackNum = -1;
+        bool isSomeError = false;
+        for (iTunesFileTrack *track in album.tracks)
+        {
+            if([track discNumber] == prevDiscNum && [track trackNumber] == prevTrackNum)
+            {
+                
+                isSomeError = true;
+                NSString *errMsg = [NSString stringWithFormat:@"'%@'의 트랙 번호가 이전 곡과 동일합니다.", [track name]];
+                [self displayErrorMsgOfItunesSelection:errMsg];
+                break;
+            }
+            prevDiscNum = [track discNumber];
+            prevTrackNum = [track trackNumber];
+        }
+        
+        return isSomeError == false;
+    }
+    else
+    {
+        assert(false);
+        return true;
+    }
+}
 
-// - (BOOL)outlineView:(NSOutlineView *)outlineView shouldEditTableColumn:(NSTableColumn *)tableColumn item:(id)item {
-//    return NO;
-// }
+- (void)outlineViewSelectionDidChange:(NSNotification *)notification
+{
+    NSOutlineView* outlineView = [notification object];
+    NSInteger idx = [outlineView selectedRow];
+    
+    if (outlineView == self.myAlbumTableView)
+    {
+        MyAlbum* myAlbum = self.myAlbums[idx];
+        NSLog(@"Album '%@' is selected", myAlbum.name);
+        
+        self.selectedMyAlbum = myAlbum;
+        
+        [self reloadRefAlbumCandidatesTable:selectedMyAlbum.name];
+    }
+    else
+        assert(false);
+}
 
+
+// IB action
 - (IBAction)updateTracks:(id)sender
 {
     // Update informations
@@ -473,6 +472,13 @@
     
     NSAlert *dialog = [NSAlert alertWithMessageText:@"업데이트가 완료되었습니다." defaultButton:@"확인" alternateButton:nil otherButton:nil informativeTextWithFormat:@""];
     [dialog runModal];
+    
+    self.refAlbums = nil;
+    self.selectedMyAlbum = nil;
+    self.selectedRefAlbum = nil;
+    [self reloadMyAlbumTable];
+    [self.refAlbumCandidatesTableView reloadData];
+    [self.tracksTableView reloadData];
 }
 
 // Version info
