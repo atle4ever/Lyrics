@@ -76,8 +76,9 @@
         [album addTrack:track];
     }
     
+    NSSortDescriptor *versionSortDesc = [[NSSortDescriptor alloc] initWithKey:@"version" ascending:YES];
     NSSortDescriptor *dateAddedSortDesc = [[NSSortDescriptor alloc] initWithKey:@"dateAdded" ascending:NO];
-    [myAlbums sortUsingDescriptors:@[dateAddedSortDesc]];
+    [myAlbums sortUsingDescriptors:@[versionSortDesc, dateAddedSortDesc]];
     
     
     [self.myAlbumTableView reloadData];
@@ -99,12 +100,21 @@
     for (NSXMLNode* albumNode in albumNodes)
     {
         NSString* albumName = [[[albumNode nodesForXPath:@"./dl/dt/a/text()" error:&err][0] stringValue] kv_decodeHTMLCharacterEntities];
-        NSString* albumArtist = [[[albumNode nodesForXPath:@"./dl/dd/a/@title" error:&err][0] stringValue] kv_decodeHTMLCharacterEntities];
+        
+        NSArray* albumArtistNodes = [albumNode nodesForXPath:@"./dl/dd/a/@title" error:&err];
+        if(albumArtistNodes.count == 0) // Artist has no link
+            albumArtistNodes = [albumNode nodesForXPath:@"./dl/dd/span/@title" error:&err];
+        assert(albumArtistNodes.count != 0);
+        NSString* albumArtist = [[albumArtistNodes[0] stringValue] kv_decodeHTMLCharacterEntities];
+        
         NSString* albumUrlStr = [[[albumNode nodesForXPath:@"./dl/dt/a/@href" error:&err][0] stringValue] kv_decodeHTMLCharacterEntities];
         NSString* albumYearStr = [[[albumNode nodesForXPath:@"./dl/dt/a/@href" error:&err][0] stringValue] kv_decodeHTMLCharacterEntities];
         NSInteger albumYear = [[albumYearStr substringToIndex:4] integerValue];
-        [refAlbums addObject:[[RefAlbum alloc] initWithName:albumName artist:albumArtist year:albumYear urlStr:albumUrlStr]];
+        [refAlbums addObject:[[RefAlbum alloc] initWithName:albumName artist:albumArtist year:albumYear urlStr:albumUrlStr isNull:false]];
     }
+    
+    if(refAlbums.count == 0) // Search fail
+        [refAlbums addObject:[[RefAlbum alloc] initWithName:@"No result!!" artist:@"" year:0 urlStr:@"" isNull:true]];
     
     [self.refAlbumCandidatesTableView reloadData];
     
@@ -129,7 +139,7 @@
     NSURL *refTrackUrl = [[NSURL alloc] initWithString:refTrackUrlStr];
     
     NSXMLDocument *refTrackPage = [[NSXMLDocument alloc] initWithContentsOfURL:refTrackUrl
-                                                                       options:NSXMLDocumentTidyXML
+                                                                       options:NSXMLDocumentTidyHTML
                                                                          error:&err];
     
     // Lyric
@@ -144,7 +154,7 @@
         for(NSXMLNode *l in lines)
         {
             NSString* str = [l description];
-            if([str compare:@"<br></br>"] == 0)
+            if([str compare:@"<br>\n</br>"] == 0)
                 [lyrics appendString:@"\n"];
             else
                 [lyrics appendString:[str kv_decodeHTMLCharacterEntities]];
@@ -309,6 +319,7 @@
 - (void)tableViewSelectionDidChange:(NSNotification *)aNotification
 {
     NSTableView* tableView = [aNotification object];
+    assert([tableView isKindOfClass:[NSTableView class]]);
     NSInteger idx = [tableView selectedRow];
     
     if(tableView == self.refAlbumCandidatesTableView)
@@ -321,6 +332,19 @@
     else if(tableView == self.tracksTableView)
     {
     }
+    else
+        assert(false);
+}
+
+-(BOOL)tableView:(NSTableView *)tableView shouldSelectRow:(NSInteger)row
+{
+    if(tableView == self.refAlbumCandidatesTableView)
+    {
+        RefAlbum* selected = refAlbums[row];
+        return selected.isNullAlbum == false;
+    }
+    else if(tableView == self.tracksTableView)
+        return true;
     else
         assert(false);
 }
@@ -431,6 +455,7 @@
 - (void)outlineViewSelectionDidChange:(NSNotification *)notification
 {
     NSOutlineView* outlineView = [notification object];
+    assert([outlineView isKindOfClass:[NSOutlineView class]]);
     NSInteger idx = [outlineView selectedRow];
     
     if (outlineView == self.myAlbumTableView)
@@ -473,6 +498,7 @@
     NSAlert *dialog = [NSAlert alertWithMessageText:@"업데이트가 완료되었습니다." defaultButton:@"확인" alternateButton:nil otherButton:nil informativeTextWithFormat:@""];
     [dialog runModal];
     
+    // Reload table views and outline view
     self.refAlbums = nil;
     self.selectedMyAlbum = nil;
     self.selectedRefAlbum = nil;

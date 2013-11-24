@@ -15,6 +15,7 @@
     NSString* artist;
     NSInteger year;
     NSString* urlStr;
+    bool isNullAlbum;
 }
 
 @property NSString* name;
@@ -22,7 +23,8 @@
 @property NSString* artist;
 @property NSInteger year;
 @property NSString* urlStr;
+@property bool isNullAlbum;
 
-- (id)initWithName:(NSString*)aName artist:(NSString*)aArtist year:(NSInteger)aYear urlStr:(NSString*)aUrlStr;
+- (id)initWithName:(NSString*)aName artist:(NSString*)aArtist year:(NSInteger)aYear urlStr:(NSString*)aUrlStr isNull:(bool)aIsNull;
 
 @end

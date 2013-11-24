@@ -15,8 +15,9 @@
 @synthesize artist;
 @synthesize year;
 @synthesize urlStr;
+@synthesize isNullAlbum;
 
-- (id)initWithName:(NSString*)aName artist:(NSString*)aArtist year:(NSInteger)aYear urlStr:(NSString*)aUrlStr
+- (id)initWithName:(NSString*)aName artist:(NSString*)aArtist year:(NSInteger)aYear urlStr:(NSString*)aUrlStr isNull:(bool)aIsNull
 {
     self = [super init];
     
@@ -25,6 +26,7 @@
     [self setArtist:[aArtist copy]];
     [self setYear:aYear];
     [self setUrlStr:[aUrlStr copy]];
+    [self setIsNullAlbum:aIsNull];
     
     return self;
 }
