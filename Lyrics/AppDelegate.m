@@ -307,10 +307,22 @@
         assert([identifier isEqualToString:@"TrackCell"]);
         
         iTunesFileTrack* track = self.selectedMyAlbum.tracks[row];
+        RefTrack* refTrack = self.selectedRefAlbum.refTracks[row];
         
         TracksCellView* cellView = [tableView makeViewWithIdentifier:identifier owner:self];
-        cellView.name.stringValue = track.name;
-        cellView.artist.stringValue = track.artist;
+        cellView.no.stringValue = [NSString stringWithFormat:@"%ld-%ld",(long)track.discNumber, (long)track.trackNumber];
+        cellView.orgName.stringValue = track.name;
+        cellView.orgArtist.stringValue = track.artist;
+        if([track.lyrics isEqualToString:@""])
+            cellView.orgLyric.stringValue = @"No lyrics";
+        else
+            cellView.orgLyric.stringValue = track.lyrics;
+        cellView.refName.stringValue = refTrack.name;
+        cellView.refArtist.stringValue = refTrack.artist;
+        if([refTrack.lyrics isEqualToString:@""])
+            cellView.refLyric.stringValue = @"No lyrics";
+        else
+            cellView.refLyric.stringValue = refTrack.lyrics;
         
         return cellView;
     }
@@ -394,6 +406,7 @@
         
         MyAlbumCellView* cellView = [outlineView makeViewWithIdentifier:identifier owner:self];
         cellView.name.stringValue = myAlbum.name;
+        cellView.artist.stringValue = myAlbum.artist;
         cellView.version.stringValue = myAlbum.version;
         cellView.dateAdded.stringValue = [myAlbum.dateAdded descriptionWithCalendarFormat:@"%Y-%m-%d 추가" timeZone:nil locale:[[NSUserDefaults standardUserDefaults] dictionaryRepresentation]];
         
@@ -406,8 +419,9 @@
     
     MyAlbumCellView* cellView = [outlineView makeViewWithIdentifier:identifier owner:self];
     cellView.name.stringValue = track.name;
+    cellView.artist.stringValue = track.artist;
     cellView.version.stringValue = @"";
-    cellView.dateAdded.stringValue = track.artist;
+    cellView.dateAdded.stringValue = @"";
     
     return cellView;
 }

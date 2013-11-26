@@ -11,6 +11,7 @@
 @implementation MyAlbumCellView
 
 @synthesize name;
+@synthesize artist;
 @synthesize version;
 @synthesize dateAdded;
 

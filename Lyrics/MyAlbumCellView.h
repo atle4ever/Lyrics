@@ -11,6 +11,7 @@
 @interface MyAlbumCellView : NSTableCellView
 
 @property(assign) IBOutlet NSTextField* name;
+@property(assign) IBOutlet NSTextField* artist;
 @property(assign) IBOutlet NSTextField* version;
 @property(assign) IBOutlet NSTextField* dateAdded;
 

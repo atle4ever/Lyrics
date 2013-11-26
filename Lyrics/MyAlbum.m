@@ -11,6 +11,7 @@
 @implementation MyAlbum
 
 @synthesize name;
+@synthesize artist;
 @synthesize version;
 @synthesize dateAdded;
 @synthesize tracks;
@@ -42,10 +43,17 @@
     
     [tracks addObject:track];
     
+    // Set dateAdded
     dateAdded = [dateAdded laterDate:[track dateAdded]];
+    
+    // Set version
     NSString* trackVer = [self getVersionFrom:track];
     if([trackVer compare:version] < 0 || version == nil)
         version = trackVer;
+    
+    // Set artist
+    if(self.artist == nil)
+        self.artist = track.artist;
 }
 
 @end

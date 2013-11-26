@@ -10,7 +10,12 @@
 
 @interface TracksCellView : NSTableCellView
 
-@property(assign) IBOutlet NSTextField* name;
-@property(assign) IBOutlet NSTextField* artist;
+@property(assign) IBOutlet NSTextField* no;
+@property(assign) IBOutlet NSTextField* orgName;
+@property(assign) IBOutlet NSTextField* orgArtist;
+@property(assign) IBOutlet NSTextField* orgLyric;
+@property(assign) IBOutlet NSTextField* refName;
+@property(assign) IBOutlet NSTextField* refArtist;
+@property(assign) IBOutlet NSTextField* refLyric;
 
 @end

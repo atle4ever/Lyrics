@@ -10,8 +10,13 @@
 
 @implementation TracksCellView
 
-@synthesize name;
-@synthesize artist;
+@synthesize no;
+@synthesize orgName;
+@synthesize orgArtist;
+@synthesize orgLyric;
+@synthesize refName;
+@synthesize refArtist;
+@synthesize refLyric;
 
 - (id)initWithFrame:(NSRect)frame
 {

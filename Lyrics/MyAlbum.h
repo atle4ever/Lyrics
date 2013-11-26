@@ -12,6 +12,7 @@
 @interface MyAlbum : NSObject
 {
     NSString* name;
+    NSString* artist;
     NSString* version;
     NSDate* dateAdded;
     NSMutableArray* tracks;
