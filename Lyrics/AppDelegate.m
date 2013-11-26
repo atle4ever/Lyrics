@@ -43,7 +43,7 @@
     iTunesPlaylist* musics = nil;
     for(iTunesPlaylist* pl in playlists)
     {
-        if([[pl name]  isEqual: @"음악"])
+        if([[pl name]  isEqual: @"음악"] || [[pl name] isEqual: @"Music"])
         {
             musics = pl;
             break;
@@ -178,6 +178,9 @@
         [refTrack setGenre:@""];
     else
         [refTrack setGenre:[[nodes[0] description] kv_decodeHTMLCharacterEntities]];
+    
+    // Url
+    [refTrack setUrlStr:refTrackUrlStr];
     
     [newRefAlbum.refTracks addObject:refTrack];
 }
