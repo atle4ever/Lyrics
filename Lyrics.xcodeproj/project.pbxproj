@@ -10,6 +10,7 @@
 		DF0B33AA182E8721004603F8 /* MyAlbum.m in Sources */ = {isa = PBXBuildFile; fileRef = DF0B33A9182E8721004603F8 /* MyAlbum.m */; };
 		DF5B305117BBC52D004A58B8 /* ScriptingBridge.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF5B305017BBC52D004A58B8 /* ScriptingBridge.framework */; };
 		DF93B7DE182E129C00D296F2 /* NSString+HTML.m in Sources */ = {isa = PBXBuildFile; fileRef = DF93B7DD182E129C00D296F2 /* NSString+HTML.m */; };
+		DFB34A0718546BC20012EE61 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFB34A0618546BC20012EE61 /* WebKit.framework */; };
 		DFC148E918313CDC00F10A1A /* RefAlbumCandidatesCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = DFC148E818313CDC00F10A1A /* RefAlbumCandidatesCellView.m */; };
 		DFC148EC183143DB00F10A1A /* TracksCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = DFC148EB183143DB00F10A1A /* TracksCellView.m */; };
 		DFC274F317A3F729003D99EA /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFC274F217A3F729003D99EA /* Cocoa.framework */; };
@@ -46,6 +47,7 @@
 		DF5B305017BBC52D004A58B8 /* ScriptingBridge.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ScriptingBridge.framework; path = System/Library/Frameworks/ScriptingBridge.framework; sourceTree = SDKROOT; };
 		DF93B7DC182E129C00D296F2 /* NSString+HTML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+HTML.h"; path = "../NSString+HTML.h"; sourceTree = "<group>"; };
 		DF93B7DD182E129C00D296F2 /* NSString+HTML.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+HTML.m"; path = "../NSString+HTML.m"; sourceTree = "<group>"; };
+		DFB34A0618546BC20012EE61 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		DFC148E718313CDC00F10A1A /* RefAlbumCandidatesCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RefAlbumCandidatesCellView.h; sourceTree = "<group>"; };
 		DFC148E818313CDC00F10A1A /* RefAlbumCandidatesCellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RefAlbumCandidatesCellView.m; sourceTree = "<group>"; };
 		DFC148EA183143DB00F10A1A /* TracksCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TracksCellView.h; sourceTree = "<group>"; };
@@ -82,6 +84,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DFB34A0718546BC20012EE61 /* WebKit.framework in Frameworks */,
 				DF5B305117BBC52D004A58B8 /* ScriptingBridge.framework in Frameworks */,
 				DFC274F317A3F729003D99EA /* Cocoa.framework in Frameworks */,
 			);
@@ -158,6 +161,7 @@
 		DFC274F117A3F729003D99EA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				DFB34A0618546BC20012EE61 /* WebKit.framework */,
 				DFC274F217A3F729003D99EA /* Cocoa.framework */,
 				DFC2751017A3F72A003D99EA /* SenTestingKit.framework */,
 				DFC274F417A3F729003D99EA /* Other Frameworks */,

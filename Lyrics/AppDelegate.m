@@ -28,6 +28,8 @@
 @synthesize selectedMyAlbum;
 @synthesize refAlbums;
 @synthesize selectedRefAlbum;
+@synthesize loginWindow;
+@synthesize loginView;
 
 - (void)displayErrorMsgOfItunesSelection:(NSString*) msg
 {
@@ -522,6 +524,18 @@
     [self reloadMyAlbumTable];
     [self.refAlbumCandidatesTableView reloadData];
     [self.tracksTableView reloadData];
+}
+
+- (IBAction)loginBugs:(id)sender
+{
+    [[self.loginView mainFrame] loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"http://www.bugs.co.kr"]]];
+    [NSApp runModalForWindow:loginWindow];
+}
+
+- (IBAction)closeLoginWindow:(id)sender
+{
+    [NSApp stopModal];
+    [self.loginWindow close];
 }
 
 // Version info

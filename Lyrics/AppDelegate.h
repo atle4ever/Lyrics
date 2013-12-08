@@ -9,6 +9,7 @@
 #import <Cocoa/Cocoa.h>
 #import "MyAlbum.h"
 #import "RefAlbum.h"
+#import <WebKit/WebKit.h>
 
 @interface AppDelegate : NSObject <NSApplicationDelegate, NSTableViewDataSource, NSTableViewDelegate, NSOutlineViewDataSource, NSOutlineViewDelegate>
 {
@@ -28,5 +29,7 @@
 @property (assign) IBOutlet NSOutlineView* myAlbumTableView;
 @property (assign) IBOutlet NSTableView* tracksTableView;
 @property (assign) IBOutlet NSTableView* refAlbumCandidatesTableView;
+@property (assign) IBOutlet NSWindow* loginWindow;
+@property (assign) IBOutlet WebView* loginView;
 
 @end

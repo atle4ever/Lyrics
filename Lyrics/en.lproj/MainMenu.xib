@@ -3,6 +3,7 @@
     <dependencies>
         <deployment defaultVersion="1090" identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="4514"/>
+        <plugIn identifier="com.apple.WebKitIBPlugin" version="3338"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="NSApplication">
@@ -665,14 +666,14 @@
                                 <rect key="frame" x="0.0" y="0.0" width="400" height="600"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <subviews>
-                                    <scrollView borderType="none" autohidesScrollers="YES" horizontalLineScroll="56" horizontalPageScroll="10" verticalLineScroll="56" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" horizontalScrollElasticity="none" id="vGw-NT-di3" userLabel="Album list">
+                                    <scrollView borderType="none" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" horizontalScrollElasticity="none" id="vGw-NT-di3" userLabel="Album list">
                                         <rect key="frame" x="0.0" y="0.0" width="400" height="350"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <clipView key="contentView" copiesOnScroll="NO" id="Tjw-pP-qLJ">
                                             <rect key="frame" x="0.0" y="0.0" width="400" height="350"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
-                                                <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnReordering="NO" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" typeSelect="NO" rowHeight="54" rowSizeStyle="automatic" viewBased="YES" id="ddE-be-SXn" customClass="NSOutlineView">
+                                                <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnReordering="NO" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" typeSelect="NO" rowSizeStyle="automatic" viewBased="YES" id="ddE-be-SXn" customClass="NSOutlineView">
                                                     <rect key="frame" x="0.0" y="0.0" width="400" height="350"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <size key="intercellSpacing" width="3" height="2"/>
@@ -857,14 +858,14 @@
                                 <rect key="frame" x="409" y="0.0" width="591" height="600"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <subviews>
-                                    <scrollView autohidesScrollers="YES" horizontalLineScroll="78" horizontalPageScroll="10" verticalLineScroll="78" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CXx-wx-00q">
+                                    <scrollView autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CXx-wx-00q">
                                         <rect key="frame" x="0.0" y="61" width="591" height="539"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <clipView key="contentView" id="X44-M2-atM">
                                             <rect key="frame" x="1" y="1" width="589" height="537"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
-                                                <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnReordering="NO" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" typeSelect="NO" rowHeight="76" rowSizeStyle="automatic" viewBased="YES" id="aVE-Ip-POE">
+                                                <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnReordering="NO" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" typeSelect="NO" rowSizeStyle="automatic" viewBased="YES" id="aVE-Ip-POE">
                                                     <rect key="frame" x="0.0" y="0.0" width="589" height="537"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <size key="intercellSpacing" width="3" height="2"/>
@@ -1005,6 +1006,17 @@
                                             <action selector="updateTracks:" target="494" id="fOg-Lr-fXe"/>
                                         </connections>
                                     </button>
+                                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="x3f-u9-O0g">
+                                        <rect key="frame" x="495" y="13" width="82" height="32"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <buttonCell key="cell" type="push" title="로그인" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="FMe-PS-uV0">
+                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                        </buttonCell>
+                                        <connections>
+                                            <action selector="loginBugs:" target="494" id="zLW-IP-ltQ"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <constraints>
                                     <constraint firstItem="CXx-wx-00q" firstAttribute="top" secondItem="6VR-IV-HMH" secondAttribute="top" id="9sn-s9-n6S"/>
@@ -1039,6 +1051,8 @@
         </window>
         <customObject id="494" customClass="AppDelegate">
             <connections>
+                <outlet property="loginView" destination="Q62-yn-dS8" id="Lt1-MR-GF4"/>
+                <outlet property="loginWindow" destination="HGQ-k0-w5H" id="Xrs-F9-xJD"/>
                 <outlet property="myAlbumTableView" destination="ddE-be-SXn" id="g7W-BT-RFP"/>
                 <outlet property="refAlbumCandidatesTableView" destination="yag-UU-ufF" id="UEH-vC-vHB"/>
                 <outlet property="tracksTableView" destination="aVE-Ip-POE" id="EGh-Mi-Ziy"/>
@@ -1046,5 +1060,55 @@
             </connections>
         </customObject>
         <customObject id="420" customClass="NSFontManager"/>
+        <window title="벅스 로그인" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" animationBehavior="default" id="HGQ-k0-w5H">
+            <windowStyleMask key="styleMask" titled="YES"/>
+            <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+            <rect key="contentRect" x="196" y="207" width="1024" height="600"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1058"/>
+            <view key="contentView" id="LC6-0x-hiD">
+                <rect key="frame" x="0.0" y="0.0" width="1024" height="600"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <webView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Q62-yn-dS8">
+                        <rect key="frame" x="0.0" y="0.0" width="1024" height="600"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <webPreferences key="preferences" defaultFontSize="12" defaultFixedFontSize="12">
+                            <nil key="identifier"/>
+                        </webPreferences>
+                    </webView>
+                </subviews>
+            </view>
+            <toolbar key="toolbar" implicitIdentifier="6355570A-8C9E-4002-B147-37F7836F5B7C" autosavesConfiguration="NO" displayMode="iconAndLabel" sizeMode="regular" id="cHk-Eg-tmZ">
+                <allowedToolbarItems>
+                    <toolbarItem implicitItemIdentifier="1F719E37-CFA0-40AD-A2CF-DF87EF465E7D" label="" paletteLabel="" id="064-3z-HY7">
+                        <nil key="toolTip"/>
+                        <size key="minSize" width="82" height="32"/>
+                        <size key="maxSize" width="86" height="43"/>
+                        <button key="view" verticalHuggingPriority="750" id="tOV-3I-RUl">
+                            <rect key="frame" x="0.0" y="14" width="86" height="43"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            <buttonCell key="cell" type="push" title="완료" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="qvv-Vg-nOi">
+                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                <font key="font" size="13" name="AppleSDGothicNeo-Regular"/>
+                            </buttonCell>
+                            <connections>
+                                <action selector="closeLoginWindow:" target="494" id="sqG-gp-nXy"/>
+                            </connections>
+                        </button>
+                    </toolbarItem>
+                </allowedToolbarItems>
+                <defaultToolbarItems>
+                    <toolbarItem reference="064-3z-HY7"/>
+                </defaultToolbarItems>
+            </toolbar>
+        </window>
+        <button verticalHuggingPriority="750" id="fxB-an-Xz7">
+            <rect key="frame" x="0.0" y="0.0" width="82" height="32"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <buttonCell key="cell" type="push" title="Button" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="x3f-R4-18x">
+                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                <font key="font" metaFont="system"/>
+            </buttonCell>
+        </button>
     </objects>
 </document>
